@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icar | Catégorie - Location & Achat Auto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --surface-elevated: #f1f5f9;
+            --border: #e2e8f0;
+            --text-primary: #002d8f;
+            --text-secondary: #0e2546;
+            --text-muted: #64748b;
+            --accent: #07153a;
+            --accent-dark: #0a1a4a;
+            --accent-soft: #dbeafe;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.03);
+            --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 40px -12px rgba(0,0,0,0.15);
+            --radius-card: 24px;
+            --transition: all 0.2s ease;
+        }
+
+        body.dark {
+            --bg: #0b1120;
+            --surface: #111827;
+            --surface-elevated: #1e293b;
+            --border: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-dark: #2563eb;
+            --accent-soft: #1e2a3e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.2s;
+            min-height: 100vh;
+        }
+
+        /* Navbar - Matching other pages */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 57px;
+            backdrop-filter: blur(20px);
+            background: color-mix(in srgb, var(--bg) 75%, transparent);
+            border-bottom: 1px solid var(--border);
+            padding: 0 40px;
+        }
+        body.dark .navbar { background: color-mix(in srgb, #0b1120 85%, transparent); }
+
+        .nav-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            gap: 16px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .back-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+        .back-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; }
+
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-symbol { width: 29px; height: 29px; background: var(--accent); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 20px; color: white; }
+        .logo-text { font-weight: 600; font-size: 20px; letter-spacing: -0.3px; color: var(--text-primary); }
+        .logo-text span { color: var(--accent); }
+
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { text-decoration: none; font-weight: 600; font-size: 14px; color: var(--text-secondary); transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+        .theme-toggle {
+            background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 40px;
+            padding: 8px 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            font-size: 14px; font-weight: 500; color: var(--text-primary); transition: var(--transition);
+        }
+        .theme-toggle:hover { background: var(--accent-soft); }
+
+        .btn-outline {
+            background: transparent; border: 1px solid var(--border); padding: 8px 18px; border-radius: 40px;
+            font-weight: 500; cursor: pointer; color: var(--text-secondary); transition: var(--transition);
+            font-family: 'Inter', sans-serif; font-size: 14px;
+        }
+        .btn-outline:hover { background: var(--accent-soft); }
+        .btn-primary {
+            background: var(--accent); border: none; padding: 8px 20px; border-radius: 40px;
+            font-weight: 600; color: white; cursor: pointer; transition: var(--transition);
+            font-family: 'Inter', sans-serif; font-size: 14px;
+        }
+        .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+        .auth-buttons { display: flex; gap: 12px; align-items: center; }
+        .user-menu { position: relative; cursor: pointer; display: none; }
+        .user-avatar {
+            display: flex; align-items: center; gap: 8px; padding: 6px 12px;
+            background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 40px; transition: all 0.2s;
+        }
+        .user-avatar:hover { background: var(--accent-soft); border-color: var(--accent); }
+        .user-avatar svg { stroke: var(--text-primary); }
+        .user-avatar span { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+        .dropdown-menu {
+            position: absolute; top: 100%; right: 0; margin-top: 8px; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 16px; min-width: 180px;
+            box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transform: translateY(-10px);
+            transition: all 0.2s; z-index: 100;
+        }
+        .user-menu:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-menu a { display: block; padding: 12px 16px; text-decoration: none; color: var(--text-secondary); font-size: 14px; transition: all 0.2s; }
+        .dropdown-menu a:hover { background: var(--accent-soft); color: var(--accent); }
+        .dropdown-menu hr { margin: 4px 0; border-color: var(--border); }
+
+        /* Main Content */
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 40px 60px; }
+
+        .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 32px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 500; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .category-header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            border-radius: 32px; padding: 48px; margin-bottom: 48px; color: white;
+            display: flex; align-items: center; gap: 48px; flex-wrap: wrap;
+            position: relative; overflow: hidden;
+        }
+        .category-header::before {
+            content: ''; position: absolute; top: -50%; right: -10%;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .category-icon {
+            width: 140px; height: 140px; background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px); border-radius: 70px;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            position: relative; z-index: 1; border: 2px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
+        }
+        .category-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .category-info { flex: 1; position: relative; z-index: 1; }
+        .category-info h1 { font-size: 44px; font-weight: 800; margin-bottom: 8px; letter-spacing: -1px; }
+        .category-info p { font-size: 16px; opacity: 0.9; margin-bottom: 20px; max-width: 500px; line-height: 1.5; }
+        .stats { display: flex; gap: 24px; }
+        .stat {
+            display: flex; align-items: baseline; gap: 8px;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
+            padding: 8px 20px; border-radius: 40px;
+        }
+        .stat-number { font-size: 28px; font-weight: 800; }
+        .stat-label { font-size: 13px; opacity: 0.8; font-weight: 500; }
+
+        .subcategories-section { margin-bottom: 48px; }
+        .section-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+        .section-title::before { content: ''; width: 4px; height: 28px; background: var(--accent); border-radius: 4px; }
+        .subcategories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px; }
+        .subcategory-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+            padding: 24px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .subcategory-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform: scaleX(0); transition: transform 0.3s ease; }
+        .subcategory-card:hover::before { transform: scaleX(1); }
+        .subcategory-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+        .subcategory-card.active { border-color: var(--accent); background: linear-gradient(135deg, var(--accent-soft) 0%, var(--surface) 100%); }
+        .subcategory-image {
+            width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden;
+            background: var(--surface-elevated); display: flex; align-items: center; justify-content: center;
+        }
+        .subcategory-card:hover .subcategory-image { transform: scale(1.05); }
+        .subcategory-image img { width: 100%; height: 100%; object-fit: cover; }
+        .subcategory-name { font-weight: 700; font-size: 16px; margin-bottom: 8px; color: var(--text-primary); }
+        .subcategory-count { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        /* Filters Bar */
+        .filters-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 16px; margin-bottom: 32px;
+            padding: 16px 0; border-bottom: 2px solid var(--border);
+        }
+        .filter-group { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+        .filter-toggle-btn {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 40px;
+            padding: 10px 18px; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            font-size: 13px; font-weight: 500; color: var(--text-secondary);
+            font-family: 'Inter', sans-serif; transition: var(--transition); white-space: nowrap;
+        }
+        .filter-toggle-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+        .filter-toggle-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .filter-count {
+            background: var(--accent); color: white; font-size: 10px; padding: 2px 7px;
+            border-radius: 50px; font-weight: 600; min-width: 20px; text-align: center;
+        }
+        .filter-toggle-btn.active .filter-count { background: white; color: var(--accent); }
+
+        .view-options { display: flex; gap: 8px; background: var(--surface-elevated); padding: 4px; border-radius: 12px; }
+        .view-btn {
+            background: transparent; border: none; padding: 8px 16px; border-radius: 8px;
+            cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 500;
+            color: var(--text-secondary); display: flex; align-items: center; gap: 6px;
+            font-family: 'Inter', sans-serif;
+        }
+        .view-btn.active { background: var(--accent); color: white; }
+        .view-btn svg { width: 18px; height: 18px; stroke: currentColor; }
+
+        /* Active Filters Tags */
+        .active-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .filter-tag {
+            background: var(--accent-soft); color: var(--accent); padding: 4px 10px;
+            border-radius: 20px; font-size: 11px; font-weight: 600; display: flex;
+            align-items: center; gap: 6px; cursor: pointer; transition: var(--transition);
+        }
+        .filter-tag:hover { background: var(--accent); color: white; }
+
+        /* Filter Drawer */
+        .filter-drawer-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 90;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .filter-drawer-overlay.open { opacity: 1; visibility: visible; }
+
+        .filter-drawer {
+            position: fixed; top: 0; left: -380px; width: 360px; height: 100vh;
+            background: var(--surface); border-right: 1px solid var(--border);
+            z-index: 200; overflow-y: auto; padding: 24px 20px;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-md);
+        }
+        .filter-drawer.open { left: 0; }
+
+        .filter-drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .filter-drawer-header h3 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+        .filter-drawer-close {
+            background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 50%;
+            width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; font-size: 16px; color: var(--text-secondary); transition: var(--transition);
+        }
+        .filter-drawer-close:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .drawer-filter-group { margin-bottom: 10px; }
+        .drawer-filter-label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--text-muted); margin-bottom: 5px; display: block;
+        }
+        .drawer-filter-select, .drawer-filter-input {
+            width: 100%; padding: 9px 12px; background: var(--surface-elevated);
+            border: 1px solid var(--border); border-radius: 8px; font-size: 13px;
+            color: var(--text-primary); font-family: 'Inter', sans-serif; outline: none;
+            transition: var(--transition); cursor: pointer;
+        }
+        .drawer-filter-select:focus, .drawer-filter-input:focus { border-color: var(--accent); }
+        .drawer-range-group { display: flex; gap: 8px; align-items: center; }
+        .drawer-range-group input { flex: 1; min-width: 0; }
+        .drawer-range-separator { color: var(--text-muted); font-size: 12px; }
+        .drawer-filter-section { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .drawer-filter-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .drawer-apply-btn, .drawer-reset-btn {
+            width: 100%; margin-top: 8px; padding: 10px; border-radius: 40px;
+            font-weight: 600; font-size: 13px; cursor: pointer; transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+        .drawer-apply-btn { background: var(--accent); color: white; border: none; }
+        .drawer-apply-btn:hover { background: var(--accent-dark); }
+        .drawer-reset-btn { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+        .drawer-reset-btn:hover { background: var(--accent-soft); }
+
+        /* Vehicles Grid */
+        .vehicles-grid { display: grid; gap: 28px; }
+        .vehicles-grid.grid-view { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+        .vehicles-grid.list-view { grid-template-columns: 1fr; }
+
+        .vehicle-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-card); overflow: hidden; transition: all 0.3s ease; cursor: pointer;
+        }
+        .vehicle-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+        .vehicles-grid.list-view .vehicle-card { display: flex; }
+        .vehicles-grid.list-view .card-img { width: 280px; height: 220px; flex-shrink: 0; }
+        .card-img {
+            height: 230px; background: var(--surface-elevated); position: relative;
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .vehicle-card:hover .card-img img { transform: scale(1.08); }
+        .vehicle-badge {
+            position: absolute; top: 14px; left: 14px;
+            background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
+            color: white; font-size: 11px; font-weight: 600;
+            padding: 5px 14px; border-radius: 30px; z-index: 2;
+        }
+        .card-content { padding: 24px; }
+        .vehicle-title { font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .vehicle-price { font-weight: 800; color: var(--accent); font-size: 18px; }
+        .vehicle-meta { display: flex; gap: 16px; margin: 16px 0; font-size: 13px; color: var(--text-muted); flex-wrap: wrap; }
+        .vehicle-meta span { display: flex; align-items: center; gap: 6px; }
+        .vehicle-meta svg { width: 16px; height: 16px; stroke: currentColor; }
+        .btn-details {
+            background: transparent; border: 1.5px solid var(--border); width: 100%;
+            margin-top: 16px; padding: 12px; border-radius: 40px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; color: var(--text-primary);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-family: 'Inter', sans-serif; font-size: 14px;
+        }
+        .btn-details:hover { background: var(--accent); border-color: var(--accent); color: white; transform: translateY(-2px); }
+        .btn-details svg { width: 18px; height: 18px; stroke: currentColor; }
+
+        .empty-state { text-align: center; padding: 80px 20px; background: var(--surface-elevated); border-radius: 32px; }
+        .empty-state svg { width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.5; stroke: var(--text-muted); }
+        .empty-state p { color: var(--text-muted); font-size: 16px; }
+
+        .load-more { text-align: center; margin-top: 48px; }
+        .loading-spinner { display: flex; justify-content: center; align-items: center; padding: 60px; }
+        .spinner { width: 50px; height: 50px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .toast { position: fixed; bottom: 30px; right: 30px; background: var(--surface); border-left: 4px solid var(--accent); padding: 12px 24px; border-radius: 12px; box-shadow: var(--shadow-lg); z-index: 1100; opacity: 0; transform: translateY(20px); transition: 0.25s; font-weight: 500; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0 20px; }
+            .container { padding: 20px; }
+            .category-header { padding: 32px; flex-direction: column; text-align: center; }
+            .category-header h1 { font-size: 32px; }
+            .subcategories-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+            .vehicles-grid.grid-view { grid-template-columns: 1fr; }
+            .vehicles-grid.list-view .vehicle-card { flex-direction: column; }
+            .vehicles-grid.list-view .card-img { width: 100%; height: 200px; }
+            .filter-drawer { width: 100%; left: -100%; }
+            .filter-drawer.open { left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+        <div class="nav-left">
+            <button class="back-btn" onclick="history.back()" title="Retour">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <a href="index.html" class="logo">
+                <div class="logo-symbol">I</div>
+                <div class="logo-text">I<span>car</span></div>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Accueil</a>
+            <a href="recherche.html">Recherche</a>
+            <button class="theme-toggle" id="themeToggle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>
+                <span>Thème</span>
+            </button>
+            <div class="auth-buttons" id="authButtons">
+                <button class="btn-outline" onclick="window.location.href='login.html'">Se connecter</button>
+                <button class="btn-primary" onclick="window.location.href='signup.html'">S'inscrire</button>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="navUserName">Compte</span>
+                </div>
+                <div class="dropdown-menu">
+                    <a href="profile.html">Mon profil</a>
+                    <hr>
+                    <a href="#" id="logoutBtn">Déconnexion</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Filter Drawer -->
+<div class="filter-drawer-overlay" id="filterOverlay" onclick="closeFilterDrawer()"></div>
+<aside class="filter-drawer" id="filterDrawer">
+    <div class="filter-drawer-header">
+        <h3>Filtres</h3>
+        <button class="filter-drawer-close" onclick="closeFilterDrawer()">✕</button>
+    </div>
+    <button class="drawer-reset-btn" onclick="resetDrawerFilters()" style="margin-bottom:14px;">✕ Réinitialiser</button>
+    <div class="drawer-filter-section">
+        <div class="drawer-filter-group">
+            <label class="drawer-filter-label">Marque</label>
+            <select class="drawer-filter-select" id="drawerBrand"><option value="">Toutes</option></select>
+        </div>
+    </div>
+    <div class="drawer-filter-section">
+        <div class="drawer-filter-group">
+            <label class="drawer-filter-label">Wilaya</label>
+            <select class="drawer-filter-select" id="drawerLocation"><option value="">Toutes</option></select>
+        </div>
+    </div>
+    <div class="drawer-filter-section">
+        <div class="drawer-filter-group" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div><label class="drawer-filter-label">Carburant</label><select class="drawer-filter-select" id="drawerFuel"><option value="">Tous</option></select></div>
+            <div><label class="drawer-filter-label">Boîte</label><select class="drawer-filter-select" id="drawerTransmission"><option value="">Toutes</option><option value="AUTOMATIC">Auto</option><option value="MANUAL">Manuelle</option></select></div>
+        </div>
+        <div class="drawer-filter-group"><label class="drawer-filter-label">Couleur</label><select class="drawer-filter-select" id="drawerColor"><option value="">Toutes</option></select></div>
+    </div>
+    <div class="drawer-filter-section">
+        <div class="drawer-filter-group"><label class="drawer-filter-label">Prix (DA)</label><div class="drawer-range-group"><input type="number" class="drawer-filter-input" id="drawerPriceMin" placeholder="Min"><span class="drawer-range-separator">à</span><input type="number" class="drawer-filter-input" id="drawerPriceMax" placeholder="Max"></div></div>
+    </div>
+    <div class="drawer-filter-section">
+        <div class="drawer-filter-group"><label class="drawer-filter-label">Année</label><div class="drawer-range-group"><input type="number" class="drawer-filter-input" id="drawerYearMin" placeholder="Min"><span class="drawer-range-separator">à</span><input type="number" class="drawer-filter-input" id="drawerYearMax" placeholder="Max"></div></div>
+        <div class="drawer-filter-group"><label class="drawer-filter-label">Kilométrage</label><div class="drawer-range-group"><input type="number" class="drawer-filter-input" id="drawerMilageMin" placeholder="Min"><span class="drawer-range-separator">à</span><input type="number" class="drawer-filter-input" id="drawerMilageMax" placeholder="Max"></div></div>
+    </div>
+    <button class="drawer-apply-btn" onclick="applyDrawerFilters()">Appliquer les filtres</button>
+</aside>
+
+<main class="container">
+    <div class="breadcrumb">
+        <a href="index.html">Accueil</a>
+        <span>›</span>
+        <span id="breadcrumbCategory">Catégorie</span>
+    </div>
+
+    <div class="category-header" id="categoryHeader">
+        <div class="category-icon" id="categoryIcon">
+            <span style="font-size:50px;">🚗</span>
+        </div>
+        <div class="category-info">
+            <h1 id="categoryName">Chargement...</h1>
+            <p id="categoryDescription"></p>
+            <div class="stats">
+                <div class="stat"><span class="stat-number" id="subcategoriesCount">0</span><span class="stat-label">Sous-catégories</span></div>
+                <div class="stat"><span class="stat-number" id="vehiclesCount">0</span><span class="stat-label">Véhicules</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="subcategories-section">
+        <div class="section-title">Sous-catégories</div>
+        <div class="subcategories-grid" id="subcategoriesGrid"><div class="loading-spinner"><div class="spinner"></div></div></div>
+    </div>
+
+    <div class="filters-bar">
+        <div class="filter-group">
+            <button class="filter-pill active" data-filter="all" style="background:transparent;border:1px solid var(--border);padding:10px 24px;border-radius:40px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text-secondary);font-family:'Inter',sans-serif;">Tous</button>
+            <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterDrawer()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/></svg>
+                Filtres
+                <span class="filter-count" id="filterCount" style="display:none;">0</span>
+            </button>
+        </div>
+        <div class="view-options">
+            <button class="view-btn active" data-view="grid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Grille</button>
+            <button class="view-btn" data-view="list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg> Liste</button>
+        </div>
+    </div>
+
+    <div class="active-filters" id="activeFilters"></div>
+
+    <div class="vehicles-grid grid-view" id="vehiclesGrid"><div class="loading-spinner"><div class="spinner"></div></div></div>
+
+    <div class="load-more" id="loadMoreContainer" style="display:none;">
+        <button class="btn-outline" id="loadMoreBtn" style="padding:14px 42px;font-weight:700;font-size:15px;margin:0 auto;">Afficher plus →</button>
+    </div>
+</main>
+
+<div id="toastMessage" class="toast"></div>
+
+<script>
+const API_BASE = 'https://api.icaralgerie.com/catalog/api';
+const urlParams = new URLSearchParams(window.location.search);
+const categoryId = parseInt(urlParams.get('id'));
+
+let category = null;
+let subcategories = [];
+let allVehicles = [];
+let filteredVehicles = [];
+let currentSubcategoryFilter = null;
+let currentView = 'grid';
+let displayedCount = 0;
+const PAGE_LIMIT = 6;
+
+let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+function getToken() { return localStorage.getItem('access_token'); }
+
+function updateAuthUI() {
+    const authButtons = document.getElementById('authButtons');
+    const userMenu = document.getElementById('userMenu');
+    if(isLoggedIn && currentUser.name) {
+        authButtons.style.display = 'none';
+        userMenu.style.display = 'block';
+        document.getElementById('navUserName').textContent = currentUser.name;
+    } else {
+        authButtons.style.display = 'flex';
+        userMenu.style.display = 'none';
+    }
+}
+
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    if(saved === 'dark') document.body.classList.add('dark');
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); localStorage.clear(); isLoggedIn = false; currentUser = {}; updateAuthUI(); window.location.reload(); });
+}
+
+async function fetchCategory() {
+    try {
+        const response = await fetch(`${API_BASE}/categories/${categoryId}/`);
+        if (!response.ok) throw new Error('Non trouvée');
+        category = await response.json();
+        updateCategoryUI();
+    } catch(e) { document.getElementById('categoryName').textContent = 'Catégorie introuvable'; }
+}
+
+async function fetchSubcategories() {
+    try {
+        const response = await fetch(`${API_BASE}/subcategories/?categorie_id=${categoryId}`);
+        if (!response.ok) throw new Error('Erreur');
+        subcategories = await response.json();
+        renderSubcategories();
+        document.getElementById('subcategoriesCount').textContent = subcategories.length;
+    } catch(e) { subcategories = []; renderSubcategories(); }
+}
+
+setCount = false
+
+async function fetchVehicles() {
+    try {
+        let url = `${API_BASE}/vehicules/?category=${categoryId}`;
+        if (currentSubcategoryFilter) url += `&subcategory=${currentSubcategoryFilter}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Erreur');
+        const data = await response.json();
+        allVehicles = Array.isArray(data) ? data : (data.results || []);
+        if(setCount == false){
+                    updateSubcategoryCountsLocal();
+                    setCount = true;
+
+        }
+        populateDrawerFilters();
+        applyAllFilters();
+        document.getElementById('vehiclesCount').textContent = allVehicles.length;
+    } catch(e) { allVehicles = []; applyAllFilters(); }
+}
+
+function updateSubcategoryCountsLocal() {
+    const counts = {};
+    allVehicles.forEach(v => { const subId = v.subcategory?.id; if(subId) counts[subId] = (counts[subId]||0)+1; });
+    subcategories = subcategories.map(sub => ({...sub, vehicle_count: counts[sub.id]||0}));
+    document.querySelectorAll('.subcategory-card').forEach(card => {
+        const subId = parseInt(card.dataset.subcategoryId);
+        const countEl = card.querySelector('.subcategory-count');
+        if(countEl) countEl.textContent = `${counts[subId]||0} véhicules`;
+    });
+}
+
+function populateDrawerFilters() {
+    const brands = [...new Set(allVehicles.map(v => v.brand).filter(Boolean))].sort();
+    const fuels = [...new Set(allVehicles.map(v => v.fuel).filter(Boolean))];
+    const colors = [...new Set(allVehicles.map(v => v.coleur).filter(Boolean))];
+    const locations = [...new Set(allVehicles.map(v => v.location).filter(Boolean))].sort();
+    document.getElementById('drawerBrand').innerHTML = '<option value="">Toutes</option>'+brands.map(b=>`<option value="${b}">${b}</option>`).join('');
+    document.getElementById('drawerFuel').innerHTML = '<option value="">Tous</option>'+fuels.map(f=>`<option value="${f}">${f}</option>`).join('');
+    document.getElementById('drawerColor').innerHTML = '<option value="">Toutes</option>'+colors.map(c=>`<option value="${c}">${c}</option>`).join('');
+    document.getElementById('drawerLocation').innerHTML = '<option value="">Toutes</option>'+locations.map(l=>`<option value="${l}">${l}</option>`).join('');
+}
+
+function applyAllFilters() {
+    let filtered = [...allVehicles];
+    if(currentSubcategoryFilter) filtered = filtered.filter(v => v.subcategory?.id === currentSubcategoryFilter);
+    
+    // Drawer filters (local)
+    const brand = document.getElementById('drawerBrand').value;
+    const location = document.getElementById('drawerLocation').value;
+    const fuel = document.getElementById('drawerFuel').value;
+    const transmission = document.getElementById('drawerTransmission').value;
+    const color = document.getElementById('drawerColor').value;
+    const pMin = parseInt(document.getElementById('drawerPriceMin').value) || null;
+    const pMax = parseInt(document.getElementById('drawerPriceMax').value) || null;
+    const yMin = parseInt(document.getElementById('drawerYearMin').value) || null;
+    const yMax = parseInt(document.getElementById('drawerYearMax').value) || null;
+    const mMin = parseInt(document.getElementById('drawerMilageMin').value) || null;
+    const mMax = parseInt(document.getElementById('drawerMilageMax').value) || null;
+
+    if(brand) filtered = filtered.filter(v => v.brand === brand);
+    if(location) filtered = filtered.filter(v => v.location === location);
+    if(fuel) filtered = filtered.filter(v => v.fuel === fuel);
+    if(transmission) filtered = filtered.filter(v => v.transmissionType === transmission);
+    if(color) filtered = filtered.filter(v => v.coleur === color);
+    if(pMin) filtered = filtered.filter(v => (v.price||0) >= pMin);
+    if(pMax) filtered = filtered.filter(v => (v.price||0) <= pMax);
+    if(yMin) filtered = filtered.filter(v => v.year >= yMin);
+    if(yMax) filtered = filtered.filter(v => v.year <= yMax);
+    if(mMin) filtered = filtered.filter(v => (v.milage||0) >= mMin);
+    if(mMax) filtered = filtered.filter(v => (v.milage||0) <= mMax);
+
+    filteredVehicles = filtered;
+    displayedCount = 0;
+    renderVehicles(true);
+    updateActiveFilters();
+    updateFilterCount();
+}
+
+function applyDrawerFilters() {
+    applyAllFilters();
+    closeFilterDrawer();
+}
+
+function resetDrawerFilters() {
+    document.getElementById('drawerBrand').value = '';
+    document.getElementById('drawerLocation').value = '';
+    document.getElementById('drawerFuel').value = '';
+    document.getElementById('drawerTransmission').value = '';
+    document.getElementById('drawerColor').value = '';
+    document.getElementById('drawerPriceMin').value = '';
+    document.getElementById('drawerPriceMax').value = '';
+    document.getElementById('drawerYearMin').value = '';
+    document.getElementById('drawerYearMax').value = '';
+    document.getElementById('drawerMilageMin').value = '';
+    document.getElementById('drawerMilageMax').value = '';
+    applyAllFilters();
+}
+
+function updateActiveFilters() {
+    const container = document.getElementById('activeFilters');
+    const tags = [];
+    const brand = document.getElementById('drawerBrand').value;
+    const fuel = document.getElementById('drawerFuel').value;
+    const transmission = document.getElementById('drawerTransmission').value;
+    const color = document.getElementById('drawerColor').value;
+    const location = document.getElementById('drawerLocation').value;
+    const pMin = document.getElementById('drawerPriceMin').value;
+    const pMax = document.getElementById('drawerPriceMax').value;
+    const yMin = document.getElementById('drawerYearMin').value;
+    const yMax = document.getElementById('drawerYearMax').value;
+    const mMin = document.getElementById('drawerMilageMin').value;
+    const mMax = document.getElementById('drawerMilageMax').value;
+    if(brand) tags.push(brand);
+    if(fuel) tags.push('⛽ '+fuel);
+    if(transmission) tags.push('⚙️ '+(transmission==='AUTOMATIC'?'Auto':'Manuelle'));
+    if(color) tags.push('🎨 '+color);
+    if(location) tags.push('📍 '+location);
+    if(pMin||pMax) tags.push(`Prix: ${pMin||'0'}-${pMax||'∞'} DA`);
+    if(yMin||yMax) tags.push(`Année: ${yMin||'—'}-${yMax||'—'}`);
+    if(mMin||mMax) tags.push(`Km: ${mMin||'0'}-${mMax||'∞'}`);
+    if(currentSubcategoryFilter) { const s = subcategories.find(s=>s.id===currentSubcategoryFilter); if(s) tags.push(s.name); }
+    container.innerHTML = tags.map(t=>`<span class="filter-tag">${t}</span>`).join('');
+}
+
+function updateFilterCount() {
+    let count = 0;
+    if(document.getElementById('drawerBrand').value) count++;
+    if(document.getElementById('drawerLocation').value) count++;
+    if(document.getElementById('drawerFuel').value) count++;
+    if(document.getElementById('drawerTransmission').value) count++;
+    if(document.getElementById('drawerColor').value) count++;
+    if(document.getElementById('drawerPriceMin').value) count++;
+    if(document.getElementById('drawerPriceMax').value) count++;
+    if(document.getElementById('drawerYearMin').value) count++;
+    if(document.getElementById('drawerYearMax').value) count++;
+    if(document.getElementById('drawerMilageMin').value) count++;
+    if(document.getElementById('drawerMilageMax').value) count++;
+    if(currentSubcategoryFilter) count++;
+    const badge = document.getElementById('filterCount');
+    const btn = document.getElementById('filterToggleBtn');
+    if(count > 0) { badge.textContent = count; badge.style.display = 'inline'; btn.classList.add('active'); }
+    else { badge.style.display = 'none'; btn.classList.remove('active'); }
+}
+
+function openFilterDrawer() {
+    document.getElementById('filterDrawer').classList.add('open');
+    document.getElementById('filterOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeFilterDrawer() {
+    document.getElementById('filterDrawer').classList.remove('open');
+    document.getElementById('filterOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function toggleFilterDrawer() {
+    if(document.getElementById('filterDrawer').classList.contains('open')) closeFilterDrawer();
+    else openFilterDrawer();
+}
+
+function renderSubcategories() {
+    const grid = document.getElementById('subcategoriesGrid');
+    if(!subcategories.length) { grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:40px;">Aucune sous-catégorie</p>'; return; }
+    grid.innerHTML = subcategories.map(sub => `
+        <div class="subcategory-card ${currentSubcategoryFilter===sub.id?'active':''}" data-subcategory-id="${sub.id}">
+            <div class="subcategory-image">
+                ${sub.image ? `<img src="${sub.image.startsWith('http')?sub.image:'https://api.icaralgerie.com'+sub.image}" alt="${sub.name}" onerror="this.innerHTML='<span style=font-size:36px>🚗</span>'">` : '<span style="font-size:36px;">🚗</span>'}
+            </div>
+            <div class="subcategory-name">${sub.name}</div>
+            <div class="subcategory-count">${sub.vehicle_count||0} véhicules</div>
+        </div>`).join('');
+    document.querySelectorAll('.subcategory-card').forEach(card => {
+        card.addEventListener('click', () => {
+            
+
+            const subId = parseInt(card.dataset.subcategoryId);
+            currentSubcategoryFilter = currentSubcategoryFilter===subId ? null : subId;
+
+            fetchVehicles();
+            renderSubcategories();
+        });
+    });
+}
+
+function getPrimaryImageUrl(vehicle) {
+    if(vehicle.images?.length > 0) {
+        const primary = vehicle.images.find(img=>img.is_primary)||vehicle.images[0];
+        return primary?.image_url||primary?.image||null;
+    }
+    return null;
+}
+
+function renderVehicles(reset=true) {
+    const grid = document.getElementById('vehiclesGrid');
+    if(reset) { grid.innerHTML = ''; displayedCount = 0; }
+    if(!filteredVehicles.length) {
+        grid.innerHTML = '<div class="empty-state"><p>Aucun véhicule trouvé</p></div>';
+        document.getElementById('loadMoreContainer').style.display = 'none';
+        return;
+    }
+    const toShow = filteredVehicles.slice(displayedCount, displayedCount+PAGE_LIMIT);
+    displayedCount += toShow.length;
+    grid.className = `vehicles-grid ${currentView==='grid'?'grid-view':'list-view'}`;
+    toShow.forEach(vehicle => {
+        const card = document.createElement('div');
+        card.className = 'vehicle-card';
+        const imgUrl = getPrimaryImageUrl(vehicle);
+        const price = (vehicle.price||0).toLocaleString('fr-DZ');
+        card.innerHTML = `
+            <div class="card-img">
+                ${imgUrl ? `<img src="${imgUrl}" alt="${vehicle.name}" onerror="this.innerHTML='<span style=color:var(--text-muted)>Pas d\\'image</span>'">` : '<span style="color:var(--text-muted);">Pas d\'image</span>'}
+                <span class="vehicle-badge">${vehicle.year||'N/A'}</span>
+            </div>
+            <div class="card-content">
+                <div class="vehicle-title"><span>${vehicle.brand||''} ${vehicle.name||''}</span><span class="vehicle-price">${price} DA</span></div>
+                <div class="vehicle-meta">
+                    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>${vehicle.fuel||'N/A'}</span>
+                    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>${vehicle.transmissionType==='AUTOMATIC'?'Auto':'Manuelle'}</span>
+                    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>${vehicle.location||'N/A'}</span>
+                    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${(vehicle.milage||0).toLocaleString()} km</span>
+                </div>
+                <button class="btn-details" data-id="${vehicle.id}">Voir détails <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>`;
+        card.querySelector('.btn-details').addEventListener('click', (e) => { e.stopPropagation(); window.location.href = `detaille_annonce.html?id=${vehicle.id}`; });
+        grid.appendChild(card);
+    });
+    document.getElementById('loadMoreContainer').style.display = displayedCount < filteredVehicles.length ? 'block' : 'none';
+}
+
+function updateCategoryUI() {
+    if(!category) return;
+    document.getElementById('breadcrumbCategory').textContent = category.name;
+    document.getElementById('categoryName').textContent = category.name;
+    document.getElementById('categoryDescription').textContent = category.description || `Découvrez notre sélection exclusive dans la catégorie ${category.name}.`;
+    if(category.image) {
+        document.getElementById('categoryIcon').innerHTML = `<img src="${category.image.startsWith('http')?category.image:'https://api.icaralgerie.com'+category.image}" alt="${category.name}">`;
+    }
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toastMessage');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.view-btn').forEach(v=>v.classList.remove('active'));
+            btn.classList.add('active');
+            currentView = btn.dataset.view;
+            renderVehicles(true);
+        });
+    });
+    document.getElementById('loadMoreBtn')?.addEventListener('click', () => renderVehicles(false));
+});
+
+if(!categoryId || isNaN(categoryId)) {
+    showToast('Catégorie non spécifiée');
+    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+} else {
+    initTheme();
+    updateAuthUI();
+    fetchCategory();
+    fetchSubcategories();
+    fetchVehicles();
+}
+</script>
+</body>
+</html>

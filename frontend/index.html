@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Icar | Location & Achat Auto — Algérie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-elevated: #f1f5f9;
+      --border: #e2e8f0;
+      --text-primary: #002d8f;
+      --text-secondary: #0e2546;
+      --text-muted: #081e3d;
+      --accent: #07153a;
+      --accent-dark: #20283e;
+      --accent-soft: #dbeafe;
+      --accent-glow: rgba(54, 78, 129, 0.08);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.03);
+      --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.08);
+      --radius-card: 24px;
+      --radius-sm: 14px;
+      --transition: all 0.2s ease;
+    }
+
+    body.dark {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-elevated: #1e293b;
+      --border: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-dark: #2563eb;
+      --accent-soft: #1e2a3e;
+      --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.5);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      transition: background 0.3s, color 0.2s;
+      scroll-behavior: smooth;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      background: color-mix(in srgb, var(--bg) 75%, transparent);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      transition: all 0.3s ease;
+    }
+    body.dark .navbar { background: color-mix(in srgb, #0b1120 85%, transparent); }
+
+    .nav-container {
+      max-width: 1850px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo-symbol {
+      width: 29px;
+      height: 29px;
+      background: var(--accent);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 20px;
+      color: white;
+    }
+    .logo-text {
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+    }
+    .logo-text span { color: var(--accent); }
+
+    /* Navbar Search - Hidden by default, shown on scroll */
+    .navbar-search-wrapper {
+      flex: 1;
+      max-width: 500px;
+      min-width: 200px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .navbar-search-wrapper.visible {
+      max-height: 50px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .navbar-search {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 4px;
+    }
+    .navbar-search input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 8px 16px;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+    .navbar-search input::placeholder {
+      color: var(--text-muted);
+    }
+    .navbar-search-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    flex-shrink: 0;
+    padding: 0; /* Add this */
+}
+.navbar-search-btn:hover {
+    background: var(--accent-dark);
+    transform: scale(1.05);
+}
+/* Add this new rule */
+.navbar-search-btn svg {
+    stroke: white;
+    width: 16px;
+    height: 16px;
+}
+
+    .categories-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+      padding: 0 8px;
+    }
+    .category-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      background: transparent;
+      border: none;
+      padding: 8px 0;
+      width: 90px;
+    }
+
+    @media (min-width: 480px) {
+      .category-card { width: 100px; }
+    }
+
+    @media (min-width: 640px) {
+      .category-card { width: 110px; }
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .category-card.active .category-image {
+      border: 3px solid var(--accent);
+      background: var(--accent-soft);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .category-card.active .category-name {
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .category-image {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 8px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--surface-elevated);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    @media (min-width: 480px) {
+      .category-image { width: 90px; height: 90px; }
+    }
+
+    @media (min-width: 640px) {
+      .category-image { width: 100px; height: 100px; }
+    }
+    .category-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      max-width: 90px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (min-width: 480px) {
+      .category-name { font-size: 14px; max-width: 100px; }
+    }
+    .category-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .category-card:hover .category-name {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+      font-size: 14px;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    .nav-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .theme-toggle {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 8px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: var(--transition);
+    }
+    .theme-toggle:hover { background: var(--accent-soft); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+    }
+    .btn-primary {
+      background: var(--accent);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+    }
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+    .auth-buttons {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .user-menu {
+      position: relative;
+      cursor: pointer;
+    }
+    .user-avatar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      transition: all 0.2s;
+    }
+    .user-avatar:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+    .user-avatar svg {
+      stroke: var(--text-primary);
+    }
+    .user-avatar span {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      min-width: 180px;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s;
+      z-index: 100;
+    }
+    .user-menu:hover .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .dropdown-menu a:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .dropdown-menu hr {
+      margin: 4px 0;
+      border-color: var(--border);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 550px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .slide.active { opacity: 1; }
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(79, 45, 10, 0.425) 0%, rgba(1, 9, 32, 0.463) 100%);
+      z-index: 1;
+    }
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      color: white;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      transition: all 0.3s ease;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slider-btn:hover { background: rgba(255,255,255,0.4); transform: translateY(-50%) scale(1.05); }
+    .slider-btn.prev { left: 30px; }
+    .slider-btn.next { right: 30px; }
+    .slider-dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 3;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dot.active { background: white; width: 28px; border-radius: 5px; }
+    .hero-content {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      z-index: 2;
+      color: white;
+      padding: 60px 40px;
+    }
+    .hero h1 { font-size: 42px; font-weight: 700; letter-spacing: -1px; line-height: 1.2; margin-bottom: 16px; color: white; }
+    .hero .accent-text { color: #ffd700; }
+    .hero p { font-size: 16px; color: rgba(255,255,255,0.9); max-width: 600px; margin: 0 auto 24px; }
+    
+    /* Simple Hero Search */
+    .hero-search-simple {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 60px;
+      padding: 6px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .hero-search-simple input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 12px 20px;
+      font-size: 15px;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+    .hero-search-simple input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+    .hero-search-simple .search-btn {
+      background: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 28px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .hero-search-simple .search-btn:hover {
+      background: rgba(255,255,255,0.9);
+      transform: translateY(-1px);
+    }
+
+    .section { max-width: 1280px; margin: 0 auto; padding: 70px 40px; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-size: 38px; font-weight: 800; letter-spacing: -1px; }
+    .cars-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px; }
+    .car-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; transition: var(--transition); cursor: pointer; }
+    .car-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+    .card-img { height: 210px; background: var(--surface-elevated); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    .car-card:hover .card-img img { transform: scale(1.03); }
+    .car-badge { position: absolute; top: 14px; left: 14px; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); color: white; font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 30px; z-index: 2; }
+    .card-content { padding: 20px; }
+    .car-title { font-size: 20px; font-weight: 700; display: flex; justify-content: space-between; }
+    .car-price { font-weight: 800; color: var(--accent); }
+    .car-meta { display: flex; gap: 16px; margin: 12px 0; font-size: 13px; color: var(--text-muted); flex-wrap: wrap; }
+    .car-meta svg { width: 14px; height: 14px; stroke: currentColor; vertical-align: middle; }
+    .btn-details { background: transparent; border: 1px solid var(--border); width: 100%; margin-top: 16px; padding: 10px; border-radius: 40px; font-weight: 500; cursor: pointer; transition: var(--transition); color: var(--text-primary); }
+    .btn-details:hover { background: var(--accent); border-color: var(--accent); color: white; }
+    .filter-group { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; justify-content: center; }
+    .filter-pill { background: transparent; border: 1px solid var(--border); padding: 8px 22px; border-radius: 40px; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text-secondary); transition: all 0.2s; }
+    .filter-pill.active, .filter-pill:hover { background: var(--accent); border-color: var(--accent); color: white; }
+    .load-more { text-align: center; margin-top: 48px; }
+    .toast { position: fixed; bottom: 30px; right: 30px; background: var(--surface); border-left: 4px solid var(--accent); padding: 12px 20px; border-radius: 60px; box-shadow: var(--shadow-md); z-index: 1100; opacity: 0; transform: translateY(20px); transition: 0.25s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    footer {
+      position: relative;
+      background: linear-gradient(135deg, #07153af7 0%, #0a1a4aef 100%);
+      color: white;
+      height: 300px;
+      padding: 60px 40px 40px;
+      margin-top: 60px;
+      overflow: hidden;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .footer-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+    .footer-col h4 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #ffd700; }
+    .footer-col p { color: rgba(255,255,255,0.7); margin-bottom: 12px; cursor: pointer; transition: color 0.2s; }
+    .footer-col p:hover { color: #ffd700; }
+    .footer-social { display: flex; gap: 16px; margin-top: 20px; }
+    .footer-social svg { width: 24px; height: 24px; stroke: white; cursor: pointer; transition: all 0.2s; }
+    .footer-social svg:hover { stroke: #ffd700; transform: translateY(-3px); }
+    .footer-bottom { text-align: center; padding-top: 40px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); font-size: 14px; }
+
+    @media (max-width: 780px) {
+      .navbar { padding: 0 18px; }
+      .hero { min-height: 480px; }
+      .hero h1 { font-size: 28px; }
+      .hero p { font-size: 14px; }
+      .slider-btn { width: 32px; height: 32px; font-size: 16px; }
+      .slider-btn.prev { left: 10px; }
+      .slider-btn.next { right: 10px; }
+      .hero-search-simple { border-radius: 28px; flex-direction: column; padding: 12px; }
+      .hero-search-simple .search-btn { width: 100%; justify-content: center; }
+      .section { padding: 40px 20px; }
+      .section-title { font-size: 28px; }
+      .nav-links { gap: 12px; }
+      .nav-links a:not(.btn-outline) { display: none; }
+      .auth-buttons { display: none; }
+      .user-menu { display: none !important; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-social { justify-content: center; }
+      .navbar-search-wrapper { max-width: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="" class="logo">
+      <div class="logo-symbol">I</div>
+      <div class="logo-text">I<span>car</span></div>
+    </a>
+    
+    <!-- Navbar Search - Hidden by default -->
+    <div class="navbar-search-wrapper" id="navbarSearchWrapper">
+      <div class="navbar-search">
+        <input type="text" id="navbarSearchInput" placeholder="Rechercher un véhicule...">
+        <button class="navbar-search-btn" id="navbarSearchBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="nav-links">
+      <a href="" class="active">Accueil</a>
+      <a href="recherche" id="exploreLink">Annonces</a>
+    </div>
+    
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path><circle cx="12" cy="12" r="4"></circle></svg>
+        <span>Thème</span>
+      </button>
+      <button class="btn-outline" id="publishBtn">Publier</button>
+      <div class="auth-buttons" id="authButtons">
+        <button class="btn-outline" id="loginBtn">Se connecter</button>
+        <button class="btn-primary" id="signupBtn">S'inscrire</button>
+      </div>
+      <div class="user-menu" id="userMenu" style="display:none;">
+        <div class="user-avatar" id="userAvatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="userName">Compte</span>
+        </div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="https://app.icaralgerie.com/profile">Mon profil</a>
+          <hr>
+          <a href="#" id="logoutBtn">Déconnexion</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-slider" id="heroSlider"></div>
+  <div class="hero-overlay"></div>
+  <button class="slider-btn prev" id="prevSlide">‹</button>
+  <button class="slider-btn next" id="nextSlide">›</button>
+  <div class="slider-dots" id="sliderDots"></div>
+  <div class="hero-content">
+    <h1>Élégance et <span class="accent-text">performance</span><br>sur chaque trajet</h1>
+    <p>La marketplace premium algérienne. Achat, vente et location de véhicules haut de gamme, en toute sérénité.</p>
+    <!-- Simple Hero Search -->
+    <div class="hero-search-simple" id="heroSearch">
+      <input type="text" id="heroSearchInput" placeholder="Marque, modèle, mot-clé...">
+      <button class="search-btn" id="heroSearchBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.3-4.3"/>
+        </svg>
+        Rechercher
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="section" id="categoriesSection">
+  <div class="section-header">
+    <div class="section-label">Nos catégories</div>
+    <div class="section-title">Choisissez votre style</div>
+    <p style="margin-top: 12px; color: var(--text-muted);">Parcourez nos véhicules par catégorie</p>
+  </div>
+  <div class="categories-grid" id="categoriesGrid"></div>
+</section>
+
+<!-- Selected Category Section -->
+<section class="section" id="selectedCategorySection" style="display: none; padding-top: 0;">
+  <div class="section-header">
+    <div class="section-label" id="selectedCategoryLabel">Catégorie</div>
+    <div class="section-title" id="selectedCategoryTitle"></div>
+  </div>
+  <div class="cars-grid" id="categoryCarsGrid"></div>
+  <div style="text-align: center; margin-top: 20px;">
+    <button class="btn-outline" id="clearCategoryFilter" style="padding: 10px 24px;">Voir tous les véhicules</button>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">catalogue exclusif</div>
+    <div class="section-title">Véhicules récents</div>
+  </div>
+  <div class="filter-group" id="typePills">
+    <button class="filter-pill active" data-type="">Tous</button>
+  </div>
+  <div class="cars-grid" id="carsGrid"></div>
+  <div class="load-more" id="loadMoreContainer" style="display:none;"><button class="btn-outline" id="loadMoreBtn" style="padding:12px 32px;">Afficher plus →</button></div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="logo-text" style="font-size:24px; color:white;">I<span style="color:#ffd700">car</span></div>
+      <p style="margin-top:16px;">Leader de la confiance automobile en Algérie.</p>
+      <div class="footer-social">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="4" ry="4"/><circle cx="12" cy="12" r="3"/><path d="M17.5 6.5h.01"/></svg>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Explorer</h4><p>Annonces</p><p>Location</p><p>Vendre ma voiture</p></div>
+    <div class="footer-col"><h4>Support</h4><p>FAQ</p><p>Contactez-nous</p><p>Assistance</p></div>
+    <div class="footer-col"><h4>Légal</h4><p>CGU</p><p>Confidentialité</p><p>Mentions légales</p></div>
+  </div>
+  <div class="footer-bottom">© 2026 Icar Tous droits réservés | Marketplace automobile Algérie</div>
+</footer>
+
+<div id="toastMessage" class="toast"></div>
+
+<script>
+  // ============ HERO SLIDER ============
+  const heroImages = [
+    'https://images.unsplash.com/photo-1632441730276-bae7eaa4900c?q=80&w=1170&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1600&q=80',
+    'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1170&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1748091677495-b55964d35458?q=80&w=1170&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1588127333419-b9d7de223dcf?q=80&w=1169&auto=format&fit=crop',
+  ];
+  
+  let currentSlide = 0, slideInterval;
+  
+  function initSlider() {
+    const sliderContainer = document.getElementById('heroSlider');
+    const dotsContainer = document.getElementById('sliderDots');
+    heroImages.forEach((img, index) => {
+      const slide = document.createElement('div');
+      slide.className = `slide ${index === 0 ? 'active' : ''}`;
+      slide.style.backgroundImage = `url(${img})`;
+      sliderContainer.appendChild(slide);
+      const dot = document.createElement('div');
+      dot.className = `dot ${index === 0 ? 'active' : ''}`;
+      dot.addEventListener('click', () => goToSlide(index));
+      dotsContainer.appendChild(dot);
+    });
+    startAutoSlide();
+  }
+  
+  function goToSlide(index) {
+    const slides = document.querySelectorAll('.slide'), dots = document.querySelectorAll('.dot');
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    currentSlide = index;
+    if (currentSlide >= slides.length) currentSlide = 0;
+    if (currentSlide < 0) currentSlide = slides.length - 1;
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+  }
+  
+  function nextSlide() { goToSlide(currentSlide + 1); resetAutoSlide(); }
+  function prevSlide() { goToSlide(currentSlide - 1); resetAutoSlide(); }
+  function startAutoSlide() { slideInterval = setInterval(() => nextSlide(), 5000); }
+  function resetAutoSlide() { clearInterval(slideInterval); startAutoSlide(); }
+
+  // ============ AUTH ============
+  let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+  function updateAuthUI() {
+    const authButtons = document.getElementById('authButtons');
+    const userMenu = document.getElementById('userMenu');
+    const userNameSpan = document.getElementById('userName');
+    
+    if (isLoggedIn && currentUser.name) {
+      authButtons.style.display = 'none';
+      userMenu.style.display = 'block';
+      userNameSpan.textContent = currentUser.name;
+    } else {
+      authButtons.style.display = 'flex';
+      userMenu.style.display = 'none';
+    }
+  }
+
+  function checkAuthStatus() {
+    const savedLogin = localStorage.getItem('isLoggedIn');
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedLogin === 'true' && savedUser) {
+      isLoggedIn = true;
+      currentUser = JSON.parse(savedUser);
+    }
+    updateAuthUI();
+  }
+
+  // ============ SCROLL-BASED NAVBAR SEARCH ============
+  function setupScrollSearch() {
+    const navbarSearchWrapper = document.getElementById('navbarSearchWrapper');
+    const heroSearch = document.getElementById('heroSearch');
+    const navbarSearchInput = document.getElementById('navbarSearchInput');
+    const heroSearchInput = document.getElementById('heroSearchInput');
+    
+    if (!heroSearch || !navbarSearchWrapper) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Hero search is visible - hide navbar search
+          navbarSearchWrapper.classList.remove('visible');
+        } else {
+          // Hero search is not visible - show navbar search
+          navbarSearchWrapper.classList.add('visible');
+          // Sync value from hero search
+          if (heroSearchInput.value.trim()) {
+            navbarSearchInput.value = heroSearchInput.value;
+          }
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '-80px 0px 0px 0px'
+    });
+    
+    observer.observe(heroSearch);
+    
+    // Sync values between inputs
+    heroSearchInput.addEventListener('input', () => {
+      navbarSearchInput.value = heroSearchInput.value;
+    });
+    
+    navbarSearchInput.addEventListener('input', () => {
+      heroSearchInput.value = navbarSearchInput.value;
+    });
+  }
+
+  // ============ SEARCH FUNCTIONALITY ============
+  function performSearch(inputElement) {
+    const query = inputElement.value.trim();
+    if (query) {
+      window.location.href = `https://app.icaralgerie.com/recherche?name=${encodeURIComponent(query)}`;
+    } else {
+      window.location.href = 'https://app.icaralgerie.com/recherche';
+    }
+  }
+
+  // ============ VEHICLES ============
+  const API_URL = 'https://api.icaralgerie.com/catalog/api/vehicules/';
+  let allCars = [], filteredCars = [], displayed = 0;
+  const PAGE_LIMIT = 6;
+
+  async function fetchVehicles() {
+    try {
+      const res = await fetch(API_URL);
+      if(!res.ok) throw new Error();
+      const data = await res.json();
+      let vehiclesArray = Array.isArray(data) ? data : (data.results || []);
+      allCars = vehiclesArray.map(car => ({
+        ...car,
+        id: car.id,
+        price: car.price || Math.floor(Math.random() * 6000000) + 2000000,
+        brand: car.brand || 'Marque',
+        name: car.name || 'Modèle',
+        year: car.year || 2021,
+        fuel: car.fuel || 'essence',
+        transmission: car.transmissionType || 'MANUAL',
+        location: car.location || 'Alger',
+        milage: car.milage || 30000,
+        description: car.description || 'Véhicule entretenu, parfait état.',
+        phone: car.phone || '05XX XX XX XX',
+        category: car.category || null,
+        subcategory: car.subcategory || null,
+        images: car.images || []
+      }));
+      if(allCars.length === 0) allCars = generateDemoData();
+      filteredCars = [...allCars];
+      renderCars(true);
+    } catch(e) {
+      allCars = generateDemoData();
+      filteredCars = [...allCars];
+      renderCars(true);
+    }
+  }
+
+  function generateDemoData() {
+    return [
+      { id: 1, brand: 'BMW', name: 'Série 3', year: 2023, price: 8900000, fuel: 'Diesel', transmissionType: 'AUTOMATIC', location: 'Alger', milage: 15000, images: [], category: {id: 1, name: 'Berline'} },
+      { id: 2, brand: 'Mercedes', name: 'Classe C', year: 2022, price: 9500000, fuel: 'Essence', transmissionType: 'AUTOMATIC', location: 'Oran', milage: 25000, images: [], category: {id: 1, name: 'Berline'} },
+      { id: 3, brand: 'Toyota', name: 'RAV4', year: 2023, price: 7200000, fuel: 'Hybride', transmissionType: 'AUTOMATIC', location: 'Constantine', milage: 10000, images: [], category: {id: 2, name: 'SUV'} },
+      { id: 4, brand: 'Peugeot', name: '208', year: 2022, price: 3200000, fuel: 'Essence', transmissionType: 'MANUAL', location: 'Alger', milage: 30000, images: [], category: {id: 3, name: 'Citadine'} },
+      { id: 5, brand: 'Volkswagen', name: 'Golf 8', year: 2023, price: 5800000, fuel: 'Essence', transmissionType: 'AUTOMATIC', location: 'Tizi Ouzou', milage: 18000, images: [], category: {id: 1, name: 'Berline'} },
+      { id: 6, brand: 'Hyundai', name: 'Tucson', year: 2022, price: 6500000, fuel: 'Diesel', transmissionType: 'AUTOMATIC', location: 'Sétif', milage: 22000, images: [], category: {id: 2, name: 'SUV'} },
+    ];
+  }
+
+  function getPrimaryImageUrl(car) {
+    if(car.images && car.images.length > 0) {
+      const primary = car.images.find(img => img.is_primary === true) || car.images[0];
+      if(primary && primary.image_url) return primary.image_url;
+      if(primary && primary.image) return primary.image;
+    }
+    return null;
+  }
+
+  function renderCars(reset = true) {
+    const grid = document.getElementById('carsGrid');
+    if(reset) { displayed = 0; grid.innerHTML = ''; }
+    const toShow = filteredCars.slice(displayed, displayed + PAGE_LIMIT);
+    displayed += toShow.length;
+    toShow.forEach(car => {
+      const card = document.createElement('div');
+      card.className = 'car-card';
+      const transText = car.transmissionType === 'AUTOMATIC' ? 'Auto' : 'Manuelle';
+      const imgUrl = getPrimaryImageUrl(car);
+      let imageHtml = '';
+      if(imgUrl) {
+        imageHtml = `<img src="${imgUrl}" alt="${car.brand} ${car.name}" loading="lazy" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.style.background='var(--surface-elevated)'; this.parentElement.style.display='flex'; this.parentElement.style.alignItems='center'; this.parentElement.style.justifyContent='center'; this.parentElement.innerText='Image non dispo';">`;
+      } else {
+        imageHtml = `<div style="display:flex; align-items:center; justify-content:center; height:100%; background:var(--surface-elevated); color:var(--text-muted);">Image non dispo</div>`;
+      } 
+      card.innerHTML = `
+        <div class="card-img">${imageHtml}<span class="car-badge">${car.year}</span></div>
+        <div class="card-content">
+          <div class="car-title"><span>${car.brand} ${car.name}</span><span class="car-price">${(car.price || 0).toLocaleString('fr-DZ')} DA</span></div>
+          <div class="car-meta">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> ${car.fuel}</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> ${transText}</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg> ${car.location}</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${(car.milage || 0).toLocaleString()} km</span>
+          </div>
+          <button class="btn-details" data-id="${car.id}">Voir détails</button>
+        </div>
+      `;
+      card.querySelector('.btn-details').addEventListener('click', (e) => { 
+        e.stopPropagation(); 
+        window.location.href = `https://app.icaralgerie.com/detaille_annonce?id=${car.id}`; 
+      });
+      card.addEventListener('click', () => {
+        window.location.href = `https://app.icaralgerie.com/detaille_annonce?id=${car.id}`;
+      });
+      grid.appendChild(card);
+    });
+    document.getElementById('loadMoreContainer').style.display = displayed < filteredCars.length ? 'block' : 'none';
+  }
+
+  // ============ CATEGORIES ============
+  let categories = [];
+  let selectedCategory = null;
+  let categoryVehicles = [];
+
+  async function fetchCategories() {
+    try {
+      const response = await fetch('https://api.icaralgerie.com/catalog/api/categories/');
+      if (!response.ok) throw new Error('Erreur chargement catégories');
+      categories = await response.json();
+      renderCategories();
+    } catch (error) {
+      console.error('Erreur catégories:', error);
+      categories = [
+        { id: 1, name: 'Berline', image: null },
+        { id: 2, name: 'SUV', image: null },
+        { id: 3, name: 'Citadine', image: null },
+        { id: 4, name: '4x4', image: null },
+      ];
+      renderCategories();
+    }
+  }
+
+  function renderCategories() {
+    const container = document.getElementById('categoriesGrid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    categories.forEach(cat => {
+      const card = document.createElement('div');
+      card.className = 'category-card';
+      card.dataset.categoryId = cat.id;
+      card.dataset.categoryName = cat.name;
+      
+      const imageDiv = document.createElement('div');
+      imageDiv.className = 'category-image';
+      imageDiv.style.display = 'flex';
+      imageDiv.style.alignItems = 'center';
+      imageDiv.style.justifyContent = 'center';
+      imageDiv.style.background = 'var(--surface-elevated)';
+      
+      const img = document.createElement('img');
+      const imageUrl = cat.image || cat.icon || null;
+      const fullUrl = imageUrl && !imageUrl.startsWith('http') 
+        ? `https://api.icaralgerie.com${imageUrl}` 
+        : imageUrl;
+      
+      if (fullUrl) {
+        img.src = fullUrl;
+        img.alt = cat.name;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.onerror = () => {
+          imageDiv.innerHTML = '<span style="font-size: 40px;">🚗</span>';
+        };
+        imageDiv.appendChild(img);
+      } else {
+        imageDiv.innerHTML = '<span style="font-size: 40px;">🚗</span>';
+      }
+      
+      const nameDiv = document.createElement('div');
+      nameDiv.className = 'category-name';
+      nameDiv.textContent = cat.name;
+      
+      card.appendChild(imageDiv);
+      card.appendChild(nameDiv);
+      
+      card.addEventListener('click', () => {
+        window.location.href = `https://app.icaralgerie.com/categories?id=${cat.id}`;
+      });
+      
+      container.appendChild(card);
+    });
+  }
+
+  // ============ EVENT LISTENERS ============
+  function setupEventListeners() {
+    // Slider buttons
+    document.getElementById('prevSlide').addEventListener('click', prevSlide);
+    document.getElementById('nextSlide').addEventListener('click', nextSlide);
+    
+    // Hero search
+    document.getElementById('heroSearchBtn').addEventListener('click', () => {
+      performSearch(document.getElementById('heroSearchInput'));
+    });
+    document.getElementById('heroSearchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch(document.getElementById('heroSearchInput'));
+    });
+    
+    // Navbar search
+    document.getElementById('navbarSearchBtn').addEventListener('click', () => {
+      performSearch(document.getElementById('navbarSearchInput'));
+    });
+    document.getElementById('navbarSearchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch(document.getElementById('navbarSearchInput'));
+    });
+    
+    // Load more
+    document.getElementById('loadMoreBtn').addEventListener('click', () => renderCars(false));
+    
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => document.body.classList.toggle('dark'));
+    
+    // Auth buttons
+    document.getElementById('publishBtn').addEventListener('click', () => {
+      if (isLoggedIn) {
+        window.location.href = 'https://app.icaralgerie.com/publish_ad';
+      } else {
+        showToast('Veuillez vous connecter pour publier une annonce');
+        setTimeout(() => { window.location.href = 'https://app.icaralgerie.com/login'; }, 1500);
+      }
+    });
+    
+    document.getElementById('loginBtn').addEventListener('click', () => window.location.href = 'https://app.icaralgerie.com/login');
+    document.getElementById('signupBtn').addEventListener('click', () => window.location.href = 'https://app.icaralgerie.com/signup');
+    
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      isLoggedIn = false;
+      currentUser = {};
+      updateAuthUI();
+      showToast('Déconnexion réussie');
+    });
+    
+    document.getElementById('exploreLink').addEventListener('click', (e) => { 
+      e.preventDefault(); 
+      document.getElementById('carsGrid').scrollIntoView({ behavior: 'smooth' }); 
+    });
+  }
+
+  function showToast(msg) { 
+    const t = document.getElementById('toastMessage'); 
+    t.innerText = msg; 
+    t.classList.add('show'); 
+    setTimeout(() => t.classList.remove('show'), 3000); 
+  }
+
+  // ============ INITIALIZATION ============
+  checkAuthStatus();
+  initSlider();
+  fetchVehicles();
+  fetchCategories();
+  setupEventListeners();
+  setupScrollSearch();
+</script>
+</body>
+</html>

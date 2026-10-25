@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil Public | iCar — Algérie</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-elevated: #f1f5f9;
+    --border: #e2e8f0;
+    --text-primary: #002d8f;
+    --text-secondary: #0e2546;
+    --text-muted: #081e3d;
+    --accent: #07153a;
+    --accent-dark: #20283e;
+    --accent-soft: #dbeafe;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.03);
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.08);
+    --radius-card: 24px;
+    --radius-sm: 14px;
+    --transition: all 0.2s ease;
+    --error: #dc2626;
+    --success: #10b981;
+  }
+
+  body.dark {
+    --bg: #0b1120;
+    --surface: #111827;
+    --surface-elevated: #1e293b;
+    --border: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-dark: #2563eb;
+    --accent-soft: #1e2a3e;
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.5);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.2s;
+    min-height: 100vh;
+  }
+
+  /* Navbar */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 65px;
+    backdrop-filter: blur(20px);
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+  }
+  body.dark .navbar { background: color-mix(in srgb, #0b1120 85%, transparent); }
+  .nav-container {
+    max-width: 1850px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .logo-symbol { width: 29px; height: 29px; background: var(--accent); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 20px; color: white; }
+  .logo-text { font-weight: 600; font-size: 20px; letter-spacing: -0.3px; color: var(--text-primary); }
+  .logo-text span { color: var(--accent); }
+  .nav-links { display: flex; gap: 24px; align-items: center; }
+  .nav-links a { text-decoration: none; font-weight: 600; font-size: 14px; color: var(--text-secondary); transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+  .theme-toggle {
+    background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 40px;
+    padding: 8px 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 500; color: var(--text-primary); transition: var(--transition);
+  }
+  .theme-toggle:hover { background: var(--accent-soft); }
+  .btn-outline {
+    background: transparent; border: 1px solid var(--border); padding: 8px 18px; border-radius: 40px;
+    font-weight: 500; cursor: pointer; color: var(--text-secondary); transition: var(--transition);
+    font-family: 'Inter', sans-serif; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-outline:hover { background: var(--accent-soft); }
+  .btn-primary {
+    background: var(--accent); border: none; padding: 8px 20px; border-radius: 40px;
+    font-weight: 600; color: white; cursor: pointer; transition: var(--transition);
+    font-family: 'Inter', sans-serif; font-size: 14px;
+  }
+  .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .auth-buttons { display: flex; gap: 12px; align-items: center; }
+
+  /* User menu */
+  .user-menu { position: relative; cursor: pointer; display: none; }
+  .user-avatar {
+    display: flex; align-items: center; gap: 8px; padding: 6px 12px;
+    background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 40px; transition: all 0.2s;
+  }
+  .user-avatar:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .user-avatar svg { stroke: var(--text-primary); }
+  .user-avatar span { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .dropdown-menu {
+    position: absolute; top: 100%; right: 0; margin-top: 8px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 16px; min-width: 180px;
+    box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transform: translateY(-10px);
+    transition: all 0.2s; z-index: 100;
+  }
+  .user-menu:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+  .dropdown-menu a { display: block; padding: 12px 16px; text-decoration: none; color: var(--text-secondary); font-size: 14px; transition: all 0.2s; }
+  .dropdown-menu a:hover { background: var(--accent-soft); color: var(--accent); }
+  .dropdown-menu hr { margin: 4px 0; border-color: var(--border); }
+
+  /* Profile Header */
+  .profile-header {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    padding: 40px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-header::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1600&q=80') center/cover;
+    opacity: 0.1; pointer-events: none;
+  }
+  .profile-header-content {
+    max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 28px;
+    position: relative; z-index: 1; flex-wrap: wrap;
+  }
+  .profile-avatar {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid rgba(255,255,255,0.3); flex-shrink: 0;
+  }
+  .profile-avatar span {
+    font-size: 40px; font-weight: 700; color: white; text-transform: uppercase;
+  }
+  .profile-info { flex: 1; min-width: 200px; }
+  .profile-info h1 { font-size: 32px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.5px; }
+  .profile-info .join-date { font-size: 14px; color: rgba(255,255,255,0.7); }
+  .profile-actions { display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
+
+  .btn-follow {
+    padding: 10px 24px; border-radius: 40px; font-weight: 600; font-size: 14px;
+    cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; gap: 8px; border: none;
+  }
+  .btn-follow.follow {
+    background: white; color: var(--accent);
+  }
+  .btn-follow.follow:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); }
+  .btn-follow.unfollow {
+    background: rgba(220,38,38,0.15); color: #fca5a5; border: 1px solid rgba(220,38,38,0.3);
+  }
+  .btn-follow.unfollow:hover { background: var(--error); color: white; border-color: var(--error); }
+
+  /* Stats Cards */
+  .stats-row {
+    max-width: 1280px; margin: -28px auto 0; padding: 0 40px; position: relative; z-index: 2;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 20px; text-align: center; transition: transform 0.2s; box-shadow: var(--shadow-sm);
+  }
+  .stat-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .stat-card svg { width: 28px; height: 28px; stroke: var(--accent); stroke-width: 1.5; margin-bottom: 10px; }
+  .stat-card-num { font-size: 28px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+  .stat-card-label { font-size: 12px; color: var(--text-muted); }
+
+  /* Main Content - Full width (no sidebar by default) */
+  .main-container {
+    max-width: 1600px;
+    margin: 32px auto;
+    padding: 0 40px;
+    position: relative;
+  }
+
+  /* Filter Drawer - Overlay style */
+  .filter-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 90;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  .filter-drawer-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .filter-drawer {
+    position: fixed;
+    top: 0;
+    left: -380px;
+    width: 360px;
+    height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 24px 20px;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-md);
+  }
+  .filter-drawer.open {
+    left: 0;
+  }
+
+  .filter-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter-drawer-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .filter-drawer-close {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--text-secondary);
+    transition: var(--transition);
+  }
+  .filter-drawer-close:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .filter-group { margin-bottom: 10px; }
+  .filter-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); margin-bottom: 5px; display: block;
+  }
+  .filter-select, .filter-input {
+    width: 100%; padding: 9px 12px; background: var(--surface-elevated);
+    border: 1px solid var(--border); border-radius: 8px; font-size: 13px;
+    color: var(--text-primary); font-family: 'Inter', sans-serif; outline: none;
+    transition: var(--transition); cursor: pointer;
+  }
+  .filter-select:focus, .filter-input:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 2px rgba(54, 78, 129, 0.1);
+  }
+  .range-group { display: flex; gap: 8px; align-items: center; }
+  .range-group input { flex: 1; min-width: 0; }
+  .range-separator { color: var(--text-muted); font-size: 12px; }
+  .filter-section { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .filter-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .apply-filters-btn, .reset-filters-btn {
+    width: 100%; margin-top: 8px; padding: 10px; border-radius: 40px;
+    font-weight: 600; font-size: 13px; cursor: pointer; transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+  }
+  .apply-filters-btn { background: var(--accent); color: white; border: none; }
+  .apply-filters-btn:hover { background: var(--accent-dark); }
+  .reset-filters-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--text-secondary);
+  }
+  .reset-filters-btn:hover { background: var(--accent-soft); }
+
+  /* Active Filters Tags */
+  .active-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .filter-tag {
+    background: var(--accent-soft); color: var(--accent); padding: 4px 10px;
+    border-radius: 20px; font-size: 11px; font-weight: 600; display: flex;
+    align-items: center; gap: 6px; cursor: pointer; transition: var(--transition);
+  }
+  .filter-tag:hover { background: var(--accent); color: white; }
+
+  /* Search Bar */
+  .search-bar {
+    display: flex; gap: 8px; margin-bottom: 20px;
+  }
+  .search-bar input {
+    flex: 1; padding: 10px 16px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 40px; font-size: 14px;
+    color: var(--text-primary); font-family: 'Inter', sans-serif; outline: none;
+    transition: var(--transition);
+  }
+  .search-bar input:focus { border-color: var(--accent); }
+  .search-bar input::placeholder { color: var(--text-muted); }
+  
+  /* Filter Toggle Button */
+  .filter-toggle-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 10px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    transition: var(--transition);
+    white-space: nowrap;
+  }
+  .filter-toggle-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .filter-toggle-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+  .filter-toggle-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .filter-count {
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 50px;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+  }
+  .filter-toggle-btn.active .filter-count {
+    background: white;
+    color: var(--accent);
+  }
+
+  .search-bar button[type="submit"] {
+    background: var(--accent); border: none; border-radius: 50%; width: 42px; height: 42px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: var(--transition); flex-shrink: 0;
+  }
+  .search-bar button[type="submit"]:hover { background: var(--accent-dark); }
+  .search-bar button[type="submit"] svg { stroke: white; }
+
+  /* Results */
+  .results-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
+  }
+  .results-count { font-size: 14px; color: var(--text-muted); }
+  .results-count strong { color: var(--text-primary); font-weight: 700; }
+  .sort-select {
+    padding: 8px 14px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 13px; color: var(--text-primary);
+    font-family: 'Inter', sans-serif; cursor: pointer; outline: none;
+  }
+
+  .cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .car-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-card); overflow: hidden; transition: var(--transition); cursor: pointer;
+  }
+  .car-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+  .card-img {
+    height: 200px; background: var(--surface-elevated); position: relative;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+  .car-card:hover .card-img img { transform: scale(1.03); }
+  .car-badge {
+    position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(4px); color: white; font-size: 11px; font-weight: 600;
+    padding: 5px 12px; border-radius: 30px; z-index: 2;
+  }
+  .card-content { padding: 16px; }
+  .car-title { font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+  .car-price { font-weight: 800; color: var(--accent); white-space: nowrap; }
+  .car-meta { display: flex; gap: 12px; margin: 10px 0; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+  .car-meta svg { width: 13px; height: 13px; stroke: currentColor; vertical-align: middle; }
+  .btn-details {
+    background: transparent; border: 1px solid var(--border); width: 100%;
+    margin-top: 10px; padding: 10px; border-radius: 40px; font-weight: 500;
+    cursor: pointer; transition: var(--transition); color: var(--text-primary);
+    font-family: 'Inter', sans-serif; font-size: 14px;
+  }
+  .btn-details:hover { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .empty-state { text-align: center; padding: 60px 20px; }
+  .empty-state svg { width: 52px; height: 52px; stroke: var(--text-muted); stroke-width: 1.5; margin-bottom: 16px; }
+  .empty-state h3 { font-size: 20px; margin-bottom: 8px; }
+  .empty-state p { color: var(--text-muted); font-size: 14px; }
+
+  .loading { text-align: center; padding: 40px; }
+  .spin { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin-anim .7s linear infinite; }
+  @keyframes spin-anim { to { transform: rotate(360deg); } }
+
+  .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 30px; }
+  .page-btn {
+    padding: 8px 16px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 25px; font-weight: 500; font-size: 13px; cursor: pointer;
+    transition: var(--transition); color: var(--text-primary); font-family: 'Inter', sans-serif;
+  }
+  .page-btn:hover, .page-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Login Dialog */
+  .dialog-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .dialog-overlay.show { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .dialog-card {
+    background: var(--surface); border-radius: var(--radius-card); padding: 32px;
+    max-width: 420px; width: 90%; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .dialog-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .dialog-card p { color: var(--text-muted); margin-bottom: 24px; font-size: 14px; }
+  .dialog-actions { display: flex; gap: 12px; justify-content: center; }
+
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 12px;
+    font-size: 14px; font-weight: 500; z-index: 9999; animation: slideUpToast .3s ease;
+    background: var(--surface); border-left: 4px solid var(--accent);
+    color: var(--text-primary); box-shadow: var(--shadow-md);
+  }
+  .toast.success { border-left-color: var(--success); }
+  .toast.error { border-left-color: var(--error); }
+  @keyframes slideUpToast { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 640px) {
+    .navbar { padding: 0 12px; }
+    .nav-links { gap: 8px; }
+    .nav-links a:not(.active) { display: none; }
+    .profile-header { padding: 24px 20px; }
+    .profile-header-content { flex-direction: column; text-align: center; }
+    .profile-info h1 { font-size: 24px; }
+    .stats-row { padding: 0 20px; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: -20px; }
+    .stat-card { padding: 14px; }
+    .stat-card-num { font-size: 22px; }
+    .main-container { padding: 16px; }
+    .cars-grid { grid-template-columns: 1fr; }
+    .filter-drawer { width: 100%; left: -100%; }
+    .filter-drawer.open { left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">
+      <div class="logo-symbol">I</div>
+      <div class="logo-text">I<span>car</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="recherche.html">Recherche</a>
+      <button class="theme-toggle" id="themeToggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>
+        <span>Thème</span>
+      </button>
+      <div class="auth-buttons" id="authButtons">
+        <button class="btn-outline" onclick="window.location.href='login.html'">Se connecter</button>
+        <button class="btn-primary" onclick="window.location.href='signup.html'">S'inscrire</button>
+      </div>
+      <div class="user-menu" id="userMenu">
+        <div class="user-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="navUserName">Compte</span>
+        </div>
+        <div class="dropdown-menu">
+          <a href="profile.html">Mon profil</a>
+          <hr>
+          <a href="#" id="logoutBtn">Déconnexion</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="profile-header" id="profileHeader">
+  <div class="profile-header-content">
+    <div class="profile-avatar" id="profileAvatar"><span>—</span></div>
+    <div class="profile-info">
+      <h1 id="profileName">Chargement...</h1>
+      <div class="join-date" id="profileJoinDate">—</div>
+    </div>
+    <div class="profile-actions">
+      <button class="btn-follow follow" id="followBtn" onclick="handleFollow()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        <span id="followBtnText">Suivre</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 16H9m10 0h3v-3.5L19 9h-3M5 16H3v-3.5L7 9h3M10 9h4"/><rect x="3" y="13" width="18" height="3" rx="1"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
+    <div class="stat-card-num" id="statVehicles">—</div>
+    <div class="stat-card-label">Véhicules</div>
+  </div>
+  <div class="stat-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div class="stat-card-num" id="statFollowers">—</div>
+    <div class="stat-card-label">Abonnés</div>
+  </div>
+  <div class="stat-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <div class="stat-card-num" id="statFollowing">—</div>
+    <div class="stat-card-label">Abonnements</div>
+  </div>
+</div>
+
+<div class="main-container">
+  <!-- Filter Drawer Overlay -->
+  <div class="filter-drawer-overlay" id="filterOverlay" onclick="closeFilterDrawer()"></div>
+  
+  <!-- Filter Drawer -->
+  <aside class="filter-drawer" id="filterDrawer">
+    <div class="filter-drawer-header">
+      <h3>Filtres</h3>
+      <button class="filter-drawer-close" onclick="closeFilterDrawer()">✕</button>
+    </div>
+    <button class="reset-filters-btn" onclick="resetFilters()" style="margin-bottom:16px;">✕ Réinitialiser tous les filtres</button>
+    <div class="filter-section">
+      <div class="filter-group">
+        <label class="filter-label">Catégorie</label>
+        <select class="filter-select" id="filterCategory"><option value="">Toutes</option></select>
+      </div>
+      <div class="filter-group" id="subcategoryGroup" style="display:none;">
+        <label class="filter-label">Sous-catégorie</label>
+        <select class="filter-select" id="filterSubcategory"><option value="">Toutes</option></select>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-group">
+        <label class="filter-label">Marque</label>
+        <select class="filter-select" id="filterBrand"><option value="">Toutes</option></select>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-group">
+        <label class="filter-label">Wilaya</label>
+        <select class="filter-select" id="filterLocation"><option value="">Toutes</option></select>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-group" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><label class="filter-label">Carburant</label><select class="filter-select" id="filterFuel"><option value="">Tous</option></select></div>
+        <div><label class="filter-label">Boîte</label><select class="filter-select" id="filterTransmission"><option value="">Toutes</option></select></div>
+      </div>
+      <div class="filter-group"><label class="filter-label">Couleur</label><select class="filter-select" id="filterColor"><option value="">Toutes</option></select></div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-group"><label class="filter-label">Année</label><div class="range-group"><input type="number" class="filter-input" id="filterYearMin" placeholder="Min"><span class="range-separator">à</span><input type="number" class="filter-input" id="filterYearMax" placeholder="Max"></div></div>
+      <div class="filter-group"><label class="filter-label">Kilométrage</label><div class="range-group"><input type="number" class="filter-input" id="filterMilageMin" placeholder="Min"><span class="range-separator">à</span><input type="number" class="filter-input" id="filterMilageMax" placeholder="Max"></div></div>
+    </div>
+    <button class="apply-filters-btn" onclick="applyFilters(); closeFilterDrawer();">Appliquer les filtres</button>
+  </aside>
+
+  <!-- Results Area -->
+  <div class="results-area">
+    <div class="search-bar">
+      <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterDrawer()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/></svg>
+        Filtres
+        <span class="filter-count" id="filterCount" style="display:none;">0</span>
+      </button>
+      <input type="text" id="searchInput" placeholder="Rechercher par marque, modèle...">
+      <button type="submit" onclick="applyFilters()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+    </div>
+    <div class="active-filters" id="activeFilters"></div>
+    <div class="results-header">
+      <div class="results-count"><strong id="resultsCount">0</strong> véhicule(s) trouvé(s)</div>
+      <select class="sort-select" id="sortSelect" onchange="applySorting()">
+        <option value="recent">Plus récents</option>
+        <option value="price-asc">Prix ↑</option>
+        <option value="price-desc">Prix ↓</option>
+        <option value="year-desc">Année récente</option>
+        <option value="milage-asc">Km faible</option>
+      </select>
+    </div>
+    <div class="cars-grid" id="carsGrid"><div class="loading"><div class="spin"></div></div></div>
+    <div class="pagination" id="pagination" style="display:none;"></div>
+  </div>
+</div>
+
+<div class="dialog-overlay" id="loginDialog">
+  <div class="dialog-card">
+    <h3>Connexion requise</h3>
+    <p>Connectez-vous pour suivre cet utilisateur et recevoir ses notifications.</p>
+    <div class="dialog-actions">
+      <button class="btn-outline" onclick="closeLoginDialog()">Annuler</button>
+      <button class="btn-primary" onclick="goToLogin()">Se connecter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const NOTIF_URL = 'https://api.icaralgerie.com/notifications';
+const CATALOG_URL = 'https://api.icaralgerie.com/catalog/api';
+
+let profileUserId = null;
+let userProfile = null;
+let allVehicles = [];
+let filteredVehicles = [];
+let isFollowing = false;
+let currentPage = 1;
+const PAGE_SIZE = 12;
+
+function getUserIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id') || params.get('user');
+}
+
+function getToken() { return localStorage.getItem('access_token'); }
+function isLoggedIn() { return !!getToken(); }
+function getCurrentUser() { return JSON.parse(localStorage.getItem('user') || 'null'); }
+function escapeHtml(s) { if(!s) return '—'; return String(s).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function fmtDate(d) { if(!d) return '—'; return new Date(d).toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'}); }
+function showToast(msg, type='success') { const t = document.createElement('div'); t.className = `toast ${type}`; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3500); }
+
+function updateAuthUI() {
+  const authButtons = document.getElementById('authButtons');
+  const userMenu = document.getElementById('userMenu');
+  const user = getCurrentUser();
+  if(isLoggedIn() && user?.name) {
+    authButtons.style.display = 'none';
+    userMenu.style.display = 'block';
+    document.getElementById('navUserName').textContent = user.name;
+  } else {
+    authButtons.style.display = 'flex';
+    userMenu.style.display = 'none';
+  }
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('theme');
+  if(saved === 'dark') document.body.classList.add('dark');
+  else if(!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) document.body.classList.add('dark');
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  });
+  document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); localStorage.clear(); window.location.reload(); });
+}
+
+async function loadUserProfile() {
+  profileUserId = getUserIdFromURL();
+  if(!profileUserId) { showToast('Utilisateur non spécifié', 'error'); return; }
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/profile/?user=${profileUserId}`);
+    if(!res.ok) throw new Error();
+    userProfile = await res.json();
+    renderProfileHeader();
+  } catch(e) { console.error('Erreur profil:', e); }
+}
+
+function renderProfileHeader() {
+  if(!userProfile) return;
+  const initials = (userProfile.name || 'U').charAt(0).toUpperCase();
+  document.getElementById('profileAvatar').innerHTML = `<span>${initials}</span>`;
+  document.getElementById('profileName').textContent = userProfile.name || 'Utilisateur';
+  document.getElementById('profileJoinDate').textContent = 'Membre depuis ' + fmtDate(userProfile.date_joined);
+  document.getElementById('statFollowers').textContent = userProfile.followers_count || 0;
+  document.getElementById('statFollowing').textContent = userProfile.following_count || 0;
+}
+
+ const paramsS = new URLSearchParams(window.location.search);
+ const idS = paramsS.get("id");
+
+async function checkFollowStatus() {
+  if(!isLoggedIn() || !profileUserId) return;
+  const user = getCurrentUser();
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/follow/check/?user=${idS}`, { headers: { Authorization: getToken() } });
+    if(res.ok) {
+      const data = await res.json();
+      isFollowing = data.is_following;
+      updateFollowButton();
+    }
+  } catch(e) {}
+}
+
+function updateFollowButton() {
+  const btn = document.getElementById('followBtn');
+  const span = document.getElementById('followBtnText');
+  if(isFollowing) {
+    btn.className = 'btn-follow unfollow';
+    span.textContent = 'Se désabonner';
+    btn.querySelector('svg').innerHTML = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+  } else {
+    btn.className = 'btn-follow follow';
+    span.textContent = 'Suivre';
+    btn.querySelector('svg').innerHTML = '<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>';
+  }
+}
+
+function handleFollow() {
+  if(!isLoggedIn()) { showLoginDialog(); return; }
+  if(isFollowing) unfollowUser();
+  else followUser();
+}
+
+async function followUser() {
+  const user = getCurrentUser();
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/follow/user/`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: getToken() },
+      body: JSON.stringify({ follower: user.id, following: parseInt(profileUserId) })
+    });
+    if(res.ok) {
+      isFollowing = true;
+      updateFollowButton();
+      userProfile.followers_count = (userProfile.followers_count || 0) + 1;
+      document.getElementById('statFollowers').textContent = userProfile.followers_count;
+      showToast('Vous suivez maintenant cet utilisateur');
+    }
+  } catch(e) { showToast('Erreur réseau', 'error'); }
+}
+
+async function unfollowUser() {
+  const user = getCurrentUser();
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/unfollow/user/`, {
+      method: 'DELETE', headers: { 'Content-Type': 'application/json', Authorization: getToken() },
+      body: JSON.stringify({ follower: user.id, following: parseInt(profileUserId) })
+    });
+    if(res.ok || res.status === 204) {
+      isFollowing = false;
+      updateFollowButton();
+      userProfile.followers_count = Math.max(0, (userProfile.followers_count || 1) - 1);
+      document.getElementById('statFollowers').textContent = userProfile.followers_count;
+      showToast('Vous ne suivez plus cet utilisateur');
+    }
+  } catch(e) { showToast('Erreur réseau', 'error'); }
+}
+
+function showLoginDialog() { document.getElementById('loginDialog').classList.add('show'); }
+function closeLoginDialog() { document.getElementById('loginDialog').classList.remove('show'); }
+function goToLogin() { window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`; }
+document.getElementById('loginDialog').addEventListener('click', (e) => { if(e.target === document.getElementById('loginDialog')) closeLoginDialog(); });
+
+async function loadVehicles() {
+  if(!profileUserId) return;
+  try {
+    const res = await fetch(`${CATALOG_URL}/vehicules/?user_id=${profileUserId}`);
+    if(!res.ok) throw new Error();
+    const data = await res.json();
+    allVehicles = Array.isArray(data) ? data : (data.results || []);
+    filteredVehicles = [...allVehicles];
+    populateFilterOptions();
+    document.getElementById('statVehicles').textContent = allVehicles.length;
+    applySorting();
+    renderPage();
+  } catch(e) { document.getElementById('carsGrid').innerHTML = '<div class="empty-state"><h3>Erreur</h3><p>Impossible de charger les véhicules.</p></div>'; }
+}
+
+function populateFilterOptions() {
+  const brands = [...new Set(allVehicles.map(v => v.brand).filter(Boolean))].sort();
+  const fuels = [...new Set(allVehicles.map(v => v.fuel).filter(Boolean))];
+  const colors = [...new Set(allVehicles.map(v => v.coleur).filter(Boolean))];
+  const locations = [...new Set(allVehicles.map(v => v.location).filter(Boolean))].sort();
+  const categories = [...new Set(allVehicles.map(v => v.category?.name).filter(Boolean))];
+  const transmissions = [...new Set(allVehicles.map(v => v.transmissionType).filter(Boolean))];
+
+  document.getElementById('filterBrand').innerHTML = '<option value="">Toutes</option>' + brands.map(b => `<option value="${b}">${b}</option>`).join('');
+  document.getElementById('filterFuel').innerHTML = '<option value="">Tous</option>' + fuels.map(f => `<option value="${f}">${f}</option>`).join('');
+  document.getElementById('filterColor').innerHTML = '<option value="">Toutes</option>' + colors.map(c => `<option value="${c}">${c}</option>`).join('');
+  document.getElementById('filterLocation').innerHTML = '<option value="">Toutes</option>' + locations.map(l => `<option value="${l}">${l}</option>`).join('');
+  document.getElementById('filterCategory').innerHTML = '<option value="">Toutes</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
+  document.getElementById('filterTransmission').innerHTML = '<option value="">Toutes</option>' + transmissions.map(t => `<option value="${t}">${t === 'AUTOMATIC' ? 'Auto' : 'Manuelle'}</option>`).join('');
+}
+
+function applyFilters() {
+  let filtered = [...allVehicles];
+  const search = document.getElementById('searchInput').value.trim().toLowerCase();
+  const category = document.getElementById('filterCategory').value;
+  const brand = document.getElementById('filterBrand').value;
+  const location = document.getElementById('filterLocation').value;
+  const fuel = document.getElementById('filterFuel').value;
+  const transmission = document.getElementById('filterTransmission').value;
+  const color = document.getElementById('filterColor').value;
+  const yearMin = parseInt(document.getElementById('filterYearMin').value) || null;
+  const yearMax = parseInt(document.getElementById('filterYearMax').value) || null;
+  const milMin = parseInt(document.getElementById('filterMilageMin').value) || null;
+  const milMax = parseInt(document.getElementById('filterMilageMax').value) || null;
+
+  if(search) filtered = filtered.filter(v => (v.brand+' '+v.name).toLowerCase().includes(search));
+  if(category) filtered = filtered.filter(v => v.category?.name === category);
+  if(brand) filtered = filtered.filter(v => v.brand === brand);
+  if(location) filtered = filtered.filter(v => v.location === location);
+  if(fuel) filtered = filtered.filter(v => v.fuel === fuel);
+  if(transmission) filtered = filtered.filter(v => v.transmissionType === transmission);
+  if(color) filtered = filtered.filter(v => v.coleur === color);
+  if(yearMin) filtered = filtered.filter(v => v.year >= yearMin);
+  if(yearMax) filtered = filtered.filter(v => v.year <= yearMax);
+  if(milMin) filtered = filtered.filter(v => v.milage >= milMin);
+  if(milMax) filtered = filtered.filter(v => v.milage <= milMax);
+
+  filteredVehicles = filtered;
+  currentPage = 1;
+  applySorting();
+  renderPage();
+  updateActiveFilters();
+  updateFilterCount();
+}
+
+function resetFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterCategory').value = '';
+  document.getElementById('filterSubcategory').value = '';
+  document.getElementById('filterBrand').value = '';
+  document.getElementById('filterLocation').value = '';
+  document.getElementById('filterFuel').value = '';
+  document.getElementById('filterTransmission').value = '';
+  document.getElementById('filterColor').value = '';
+  document.getElementById('filterYearMin').value = '';
+  document.getElementById('filterYearMax').value = '';
+  document.getElementById('filterMilageMin').value = '';
+  document.getElementById('filterMilageMax').value = '';
+  document.getElementById('subcategoryGroup').style.display = 'none';
+  filteredVehicles = [...allVehicles];
+  currentPage = 1;
+  applySorting();
+  renderPage();
+  document.getElementById('activeFilters').innerHTML = '';
+  updateFilterCount();
+}
+
+function updateActiveFilters() {
+  const container = document.getElementById('activeFilters');
+  const tags = [];
+  const search = document.getElementById('searchInput').value.trim();
+  const category = document.getElementById('filterCategory').value;
+  const brand = document.getElementById('filterBrand').value;
+  const location = document.getElementById('filterLocation').value;
+  const fuel = document.getElementById('filterFuel').value;
+  const transmission = document.getElementById('filterTransmission').value;
+  const color = document.getElementById('filterColor').value;
+  const yearMin = document.getElementById('filterYearMin').value;
+  const yearMax = document.getElementById('filterYearMax').value;
+  const milMin = document.getElementById('filterMilageMin').value;
+  const milMax = document.getElementById('filterMilageMax').value;
+
+  if(search) tags.push({label: `🔍 ${search}`, clear: ()=>{ document.getElementById('searchInput').value=''; applyFilters(); }});
+  if(category) tags.push({label: category, clear: ()=>{ document.getElementById('filterCategory').value=''; applyFilters(); }});
+  if(brand) tags.push({label: brand, clear: ()=>{ document.getElementById('filterBrand').value=''; applyFilters(); }});
+  if(location) tags.push({label: '📍 '+location, clear: ()=>{ document.getElementById('filterLocation').value=''; applyFilters(); }});
+  if(fuel) tags.push({label: '⛽ '+fuel, clear: ()=>{ document.getElementById('filterFuel').value=''; applyFilters(); }});
+  if(transmission) tags.push({label: '⚙️ '+(transmission==='AUTOMATIC'?'Auto':'Manuelle'), clear: ()=>{ document.getElementById('filterTransmission').value=''; applyFilters(); }});
+  if(color) tags.push({label: '🎨 '+color, clear: ()=>{ document.getElementById('filterColor').value=''; applyFilters(); }});
+  if(yearMin||yearMax) tags.push({label: `Année: ${yearMin||'—'}-${yearMax||'—'}`, clear: ()=>{ document.getElementById('filterYearMin').value=''; document.getElementById('filterYearMax').value=''; applyFilters(); }});
+  if(milMin||milMax) tags.push({label: `Km: ${milMin||'0'}-${milMax||'∞'}`, clear: ()=>{ document.getElementById('filterMilageMin').value=''; document.getElementById('filterMilageMax').value=''; applyFilters(); }});
+
+  container.innerHTML = tags.map((t,i) => `<span class="filter-tag">${t.label}<span style="cursor:pointer;margin-left:4px;">×</span></span>`).join('');
+  container.querySelectorAll('.filter-tag').forEach((tag, i) => { tag.addEventListener('click', () => { tags[i].clear(); }); });
+}
+
+function updateFilterCount() {
+  let count = 0;
+  if(document.getElementById('searchInput').value.trim()) count++;
+  if(document.getElementById('filterCategory').value) count++;
+  if(document.getElementById('filterBrand').value) count++;
+  if(document.getElementById('filterLocation').value) count++;
+  if(document.getElementById('filterFuel').value) count++;
+  if(document.getElementById('filterTransmission').value) count++;
+  if(document.getElementById('filterColor').value) count++;
+  if(document.getElementById('filterYearMin').value) count++;
+  if(document.getElementById('filterYearMax').value) count++;
+  if(document.getElementById('filterMilageMin').value) count++;
+  if(document.getElementById('filterMilageMax').value) count++;
+  
+  const badge = document.getElementById('filterCount');
+  const btn = document.getElementById('filterToggleBtn');
+  if(count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline';
+    btn.classList.add('active');
+  } else {
+    badge.style.display = 'none';
+    btn.classList.remove('active');
+  }
+}
+
+function applySorting() {
+  const sort = document.getElementById('sortSelect').value;
+  switch(sort) {
+    case 'price-asc': filteredVehicles.sort((a,b) => (a.price||0)-(b.price||0)); break;
+    case 'price-desc': filteredVehicles.sort((a,b) => (b.price||0)-(a.price||0)); break;
+    case 'year-desc': filteredVehicles.sort((a,b) => (b.year||0)-(a.year||0)); break;
+    case 'milage-asc': filteredVehicles.sort((a,b) => (a.milage||0)-(b.milage||0)); break;
+    default: filteredVehicles.sort((a,b) => new Date(b.created_at||0)-new Date(a.created_at||0));
+  }
+}
+
+function renderPage() {
+  const totalPages = Math.ceil(filteredVehicles.length / PAGE_SIZE);
+  if(currentPage > totalPages) currentPage = totalPages || 1;
+  const start = (currentPage-1) * PAGE_SIZE;
+  const pageItems = filteredVehicles.slice(start, start + PAGE_SIZE);
+  document.getElementById('resultsCount').textContent = filteredVehicles.length;
+
+  if(!pageItems.length) {
+    document.getElementById('carsGrid').innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><h3>Aucun véhicule</h3><p>Essayez de modifier vos filtres</p></div>';
+    document.getElementById('pagination').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('carsGrid').innerHTML = pageItems.map(v => createVehicleCard(v)).join('');
+  document.querySelectorAll('.btn-details').forEach(btn => {
+    btn.addEventListener('click', (e) => { e.stopPropagation(); window.location.href = `detaille_annonce.html?id=${btn.dataset.id}`; });
+  });
+  document.querySelectorAll('.car-card').forEach(card => {
+    card.addEventListener('click', function() { const btn = this.querySelector('.btn-details'); if(btn) window.location.href = `detaille_annonce.html?id=${btn.dataset.id}`; });
+  });
+
+  renderPagination(totalPages);
+}
+
+function createVehicleCard(v) {
+  const imgUrl = v.images?.length > 0 ? (v.images.find(i=>i.is_primary)||v.images[0]).image_url : null;
+  const transmission = v.transmissionType === 'AUTOMATIC' ? 'Auto' : 'Manuelle';
+  const price = (v.price||0).toLocaleString('fr-DZ');
+  return `<div class="car-card">
+    <div class="card-img">
+      ${imgUrl ? `<img src="${imgUrl}" alt="${v.brand} ${v.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.style.background='var(--surface-elevated)'; this.parentElement.innerHTML+='<span style=position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--text-muted)>Pas d\\'image</span>';">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted)">Pas d'image</div>`}
+      <span class="car-badge">${v.year||'N/A'}</span>
+    </div>
+    <div class="card-content">
+      <div class="car-title"><span>${escapeHtml(v.brand)} ${escapeHtml(v.name)}</span><span class="car-price">${price} DA</span></div>
+      <div class="car-meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> ${v.fuel||'N/A'}</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> ${transmission}</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg> ${v.location||'N/A'}</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${(v.milage||0).toLocaleString()} km</span>
+      </div>
+      <button class="btn-details" data-id="${v.id}">Voir détails</button>
+    </div>
+  </div>`;
+}
+
+function renderPagination(totalPages) {
+  const pag = document.getElementById('pagination');
+  if(totalPages <= 1) { pag.style.display = 'none'; return; }
+  pag.style.display = 'flex';
+  let html = `<button class="page-btn" ${currentPage===1?'disabled':''} onclick="goToPage(${currentPage-1})">←</button>`;
+  for(let i=1; i<=totalPages; i++) {
+    if(i===1 || i===totalPages || (i>=currentPage-1 && i<=currentPage+1)) {
+      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goToPage(${i})">${i}</button>`;
+    } else if(i===currentPage-2 || i===currentPage+2) {
+      html += '<span style="padding:0 4px;color:var(--text-muted)">...</span>';
+    }
+  }
+  html += `<button class="page-btn" ${currentPage===totalPages?'disabled':''} onclick="goToPage(${currentPage+1})">→</button>`;
+  pag.innerHTML = html;
+}
+
+function goToPage(page) {
+  if(page < 1 || page > Math.ceil(filteredVehicles.length/PAGE_SIZE)) return;
+  currentPage = page;
+  renderPage();
+  document.querySelector('.results-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function openFilterDrawer() {
+  document.getElementById('filterDrawer').classList.add('open');
+  document.getElementById('filterOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFilterDrawer() {
+  document.getElementById('filterDrawer').classList.remove('open');
+  document.getElementById('filterOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleFilterDrawer() {
+  if(document.getElementById('filterDrawer').classList.contains('open')) {
+    closeFilterDrawer();
+  } else {
+    openFilterDrawer();
+  }
+}
+
+// Search on Enter
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('searchInput').addEventListener('keypress', (e) => { if(e.key==='Enter') applyFilters(); });
+  document.getElementById('filterCategory').addEventListener('change', function() {
+    document.getElementById('subcategoryGroup').style.display = this.value ? 'block' : 'none';
+  });
+});
+
+// Init
+(async function init() {
+  initTheme();
+  updateAuthUI();
+  await loadUserProfile();
+  await checkFollowStatus();
+  await loadVehicles();
+})();
+</script>
+</body>
+</html>

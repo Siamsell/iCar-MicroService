@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iCar — Mon Profil</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-elevated: #f1f5f9;
+    --border: #e2e8f0;
+    --text-primary: #002d8f;
+    --text-secondary: #0e2546;
+    --text-muted: #081e3d;
+    --accent: #07153a;
+    --accent-dark: #20283e;
+    --accent-soft: #dbeafe;
+    --accent-glow: rgba(54, 78, 129, 0.08);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.03);
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.08);
+    --radius-card: 24px;
+    --radius-sm: 14px;
+    --transition: all 0.2s ease;
+    --error: #dc2626;
+    --success: #10b981;
+  }
+
+  body.dark {
+    --bg: #0b1120;
+    --surface: #111827;
+    --surface-elevated: #1e293b;
+    --border: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-dark: #2563eb;
+    --accent-soft: #1e2a3e;
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.5);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.2s;
+    min-height: 100vh;
+  }
+
+  /* Navbar */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 57px;
+    backdrop-filter: blur(20px);
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+  }
+  body.dark .navbar { background: color-mix(in srgb, #0b1120 85%, transparent); }
+
+  .nav-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .logo-symbol {
+    width: 29px;
+    height: 29px;
+    background: var(--accent);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 20px;
+    color: white;
+  }
+  .logo-text {
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+  }
+  .logo-text span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  .theme-toggle {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 8px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: var(--transition);
+  }
+  .theme-toggle:hover { background: var(--accent-soft); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: var(--transition);
+  }
+  .btn-primary {
+    background: var(--accent);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .btn-primary:hover, .btn-primary:not(:disabled) { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-danger { background: rgba(220,38,38,0.1); color: var(--error); border: 1px solid rgba(220,38,38,0.3); border-radius: 40px; padding: 8px 18px; cursor: pointer; transition: var(--transition); }
+  .btn-danger:hover { background: var(--error); color: white; }
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+
+  /* Layout */
+  .layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; min-height: calc(100vh - 73px); }
+
+  /* Sidebar */
+  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 32px 24px; }
+  .profile-card { text-align: center; margin-bottom: 32px; }
+  .avatar-ring { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); display: flex; align-items: center; justify-content: center; position: relative; }
+  .avatar-ring svg { width: 48px; height: 48px; stroke: white; stroke-width: 1.5; }
+  .online-dot { position: absolute; bottom: 4px; right: 4px; width: 14px; height: 14px; background: var(--success); border-radius: 50%; border: 2px solid var(--surface); }
+  .profile-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .profile-email { color: var(--text-muted); font-size: 13px; margin-bottom: 12px; }
+  .profile-role { display: inline-flex; align-items: center; gap: 6px; background: rgba(54, 78, 129, 0.1); border: 1px solid rgba(54, 78, 129, 0.25); color: var(--accent); font-size: 12px; padding: 4px 12px; border-radius: 50px; }
+
+  .sidebar-menu { display: flex; flex-direction: column; gap: 4px; }
+  .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; cursor: pointer; transition: all .2s; color: var(--text-muted); font-size: 14px; border: none; background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
+  .menu-item svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.5; }
+  .menu-item:hover { background: var(--surface-elevated); color: var(--text-primary); }
+  .menu-item.active { background: rgba(54, 78, 129, 0.12); color: var(--accent); border: 1px solid rgba(54, 78, 129, 0.2); }
+  .menu-badge { margin-left: auto; background: var(--error); color: white; font-size: 10px; padding: 2px 7px; border-radius: 50px; font-weight: 600; }
+  .sidebar-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+  /* Main Content */
+  .main-content { padding: 36px 48px; overflow-y: auto; }
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+  .panel-title { font-size: 26px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+  .panel-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 28px; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+  .card-title { font-size: 17px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .card-title svg { width: 20px; height: 20px; stroke: var(--accent); stroke-width: 1.5; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group.full { grid-column: 1/-1; }
+  label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 7px; font-weight: 500; }
+  .form-input { width: 100%; background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: var(--text-primary); font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: var(--transition); }
+  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .form-input:read-only { opacity: .6; cursor: not-allowed; }
+  .form-actions { display: flex; gap: 12px; margin-top: 20px; }
+
+  /* Stats Grid */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; transition: transform 0.2s; }
+  .stat-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .stat-card svg { width: 28px; height: 28px; stroke: var(--accent); stroke-width: 1.5; margin-bottom: 10px; }
+  .stat-card-num { font-size: 28px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+  .stat-card-label { font-size: 12px; color: var(--text-muted); }
+
+  /* Section Header with Refresh */
+  .section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .refresh-btn {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+  }
+  .refresh-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .refresh-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+  .refresh-btn.spinning svg {
+    animation: spin .8s linear;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Notifications */
+  .notif-toolbar { display: flex; gap: 10px; margin-bottom: 16px; justify-content: flex-end; }
+  .notif-list { display: flex; flex-direction: column; gap: 10px; }
+  .notif-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 14px; transition: all .2s; position: relative; }
+  .notif-item:hover { border-color: var(--accent); }
+  .notif-item.unread { border-left: 3px solid var(--accent); }
+  .notif-item.read { opacity: .7; }
+  .notif-icon svg { width: 22px; height: 22px; stroke: var(--accent); stroke-width: 1.5; flex-shrink: 0; margin-top: 2px; }
+  .notif-content { flex: 1; min-width: 0; }
+  .notif-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .notif-text { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
+  .notif-time { font-size: 11px; color: var(--text-muted); }
+  .notif-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .icon-btn { background: var(--surface-elevated); border: 1px solid var(--border); color: var(--text-muted); width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; }
+  .icon-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .icon-btn.danger:hover { border-color: var(--error); color: var(--error); background: rgba(220,38,38,0.1); }
+  .unread-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+
+  /* Tabs */
+  .tab-bar { display: flex; gap: 4px; background: var(--surface-elevated); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+  .tab-btn { flex: 1; padding: 9px 16px; border-radius: 9px; border: none; background: none; color: var(--text-muted); font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer; font-weight: 500; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .tab-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+  .tab-btn.active { background: var(--surface); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+
+  /* Follows */
+  .follows-list { display: flex; flex-direction: column; gap: 10px; }
+  .follow-item, .post-follow-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; transition: all .2s; }
+  .follow-item:hover, .post-follow-item:hover { border-color: var(--accent); }
+  .follow-avatar { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .follow-avatar svg { width: 22px; height: 22px; stroke: white; stroke-width: 1.5; }
+  .post-icon { width: 44px; height: 44px; background: rgba(54, 78, 129, 0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .post-icon svg { width: 22px; height: 22px; stroke: var(--accent); stroke-width: 1.5; }
+  .follow-info, .post-info { flex: 1; }
+  .follow-name, .post-title { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+  .follow-sub, .post-sub { font-size: 12px; color: var(--text-muted); }
+  .btn-unfollow { background: rgba(220,38,38,0.08); color: var(--error); border: 1px solid rgba(220,38,38,0.2); padding: 7px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all .2s; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 5px; }
+  .btn-unfollow svg { width: 12px; height: 12px; stroke: currentColor; }
+  .btn-unfollow:hover { background: var(--error); color: white; }
+
+  /* My Cars */
+  .my-cars-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .my-car-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: transform 0.2s; }
+  .my-car-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+ .my-car-img {
+  height: 180px;
+  background: var(--surface-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.my-car-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.my-car-card:hover .my-car-img img {
+  transform: scale(1.03);
+}
+.my-car-img .no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.my-car-img .no-image svg {
+  width: 52px;
+  height: 52px;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+  .my-car-body { padding: 16px; }
+  .my-car-name { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .my-car-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+  .my-car-stats { display: flex; gap: 16px; margin-bottom: 14px; }
+  .my-car-stat { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+  .my-car-stat svg { width: 14px; height: 14px; stroke: currentColor; }
+  .my-car-stat strong { color: var(--text-primary); }
+  .my-car-actions { display: flex; gap: 8px; }
+
+  /* Danger Zone */
+  .danger-zone { background: rgba(220,38,38,0.05); border: 1px solid rgba(220,38,38,0.2); border-radius: 20px; padding: 28px; }
+  .danger-title { font-size: 17px; font-weight: 700; color: var(--error); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .danger-title svg { width: 18px; height: 18px; stroke: var(--error); }
+  .danger-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+
+  /* Alerts & Empty States */
+  .alert { padding: 13px 16px; border-radius: 12px; font-size: 14px; display: none; margin-bottom: 16px; }
+  .alert.show { display: block; }
+  .alert.success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--success); }
+  .alert.error { background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3); color: var(--error); }
+  .empty-state { text-align: center; padding: 60px 20px; }
+  .empty-state svg { width: 52px; height: 52px; stroke: var(--text-muted); stroke-width: 1.5; margin-bottom: 16px; }
+  .empty-state h3 { font-size: 20px; margin-bottom: 8px; }
+  .empty-state p { color: var(--text-muted); font-size: 14px; }
+  .loading { text-align: center; padding: 40px; color: var(--text-muted); }
+  .spin { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin-anim .7s linear infinite; }
+  @keyframes spin-anim { to { transform: rotate(360deg); } }
+  .toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 9999; animation: slideUp .3s ease; background: var(--surface); border-left: 4px solid var(--accent); color: var(--text-primary); box-shadow: var(--shadow-md); }
+  .toast.success { border-left-color: var(--success); }
+  .toast.error { border-left-color: var(--error); }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface-elevated) 25%, var(--border) 50%, var(--surface-elevated) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+  }
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+  @media (max-width: 768px) {
+    .navbar { padding: 0 20px; }
+    .nav-links { gap: 15px; }
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); padding: 20px; }
+    .sidebar-menu { flex-direction: row; flex-wrap: wrap; }
+    .menu-item { flex: 1; min-width: 80px; justify-content: center; }
+    .menu-item span { display: none; }
+    .main-content { padding: 24px 20px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .my-cars-grid { grid-template-columns: 1fr; }
+  }
+  
+  .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .back-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+        .back-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-container">
+     <div class="nav-left">
+           <button class="back-btn" onclick="history.back()" title="Retour">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <a href="index.html" class="logo">
+      <div class="logo-symbol">I</div>
+      <div class="logo-text">I<span>car</span></div>
+    </a>
+</div>
+    
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="#">Annonces</a>
+      <button class="theme-toggle" id="themeToggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>
+        <span>Thème</span>
+      </button>
+      <button class="btn-outline" onclick="logout()">Déconnexion</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="profile-card">
+      <div class="avatar-ring">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <div class="online-dot"></div>
+      </div>
+      <div class="profile-name" id="sidebarName">Chargement...</div>
+      <div class="profile-email" id="sidebarEmail">—</div>
+      <div class="profile-role" id="sidebarRole"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Chargement</div>
+    </div>
+
+    <div class="sidebar-menu">
+      <button class="menu-item active" onclick="switchTab('overview',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M12 17V5"/><path d="M6 17v-3"/></svg><span>Vue d'ensemble</span></button>
+      <button class="menu-item" onclick="switchTab('profile',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Mon profil</span></button>
+      <button class="menu-item" onclick="switchTab('password',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Mot de passe</span></button>
+      <button class="menu-item" onclick="switchTab('cars',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 16H9m10 0h3v-3.5L19 9h-3M5 16H3v-3.5L7 9h3M10 9h4"/><rect x="3" y="13" width="18" height="3" rx="1"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg><span>Mes annonces</span></button>
+      <div class="sidebar-divider"></div>
+      <button class="menu-item" onclick="switchTab('notifications',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span>Notifications</span><span class="menu-badge" id="notifBadge" style="display:none;">0</span></button>
+      <button class="menu-item" onclick="switchTab('follows',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Abonnements</span></button>
+      <div class="sidebar-divider"></div>
+      <button class="menu-item" onclick="switchTab('settings',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Paramètres</span></button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- OVERVIEW -->
+    <div class="section-panel active" id="panel-overview">
+      <div class="panel-title">Tableau de bord</div>
+      <div class="panel-sub">Bienvenue, <span id="welcomeName">—</span> 👋</div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 16H9m10 0h3v-3.5L19 9h-3M5 16H3v-3.5L7 9h3M10 9h4"/><rect x="3" y="13" width="18" height="3" rx="1"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg><div class="stat-card-num" id="statCars">—</div><div class="stat-card-label">Mes annonces</div></div>
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><div class="stat-card-num" id="statFollowing">—</div><div class="stat-card-label">Abonnements</div></div>
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><div class="stat-card-num" id="statFollowers">—</div><div class="stat-card-label">Abonnés</div></div>
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="stat-card-num" id="statNotifs">—</div><div class="stat-card-label">Notifications</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Informations du compte</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" id="accountInfo"><div class="loading"><div class="spin"></div></div></div>
+      </div>
+    </div>
+
+    <!-- PROFILE EDIT -->
+    <div class="section-panel" id="panel-profile">
+      <div class="panel-title">Modifier le profil</div>
+      <div class="panel-sub">Mettez à jour vos informations personnelles</div>
+      <div class="alert" id="profileAlert"></div>
+      <div class="card">
+        <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Informations personnelles</div>
+        <form id="profileForm">
+          <div class="form-grid">
+            <div class="form-group"><label>Nom complet</label><input type="text" class="form-input" id="editName" placeholder="Votre nom"></div>
+            <div class="form-group"><label>Numéro de téléphone</label><input type="tel" class="form-input" id="editNumber" placeholder="0555 xxx xxx"></div>
+            <div class="form-group full"><label>Adresse email</label><input type="email" class="form-input" id="editEmail" placeholder="votre@email.com"></div>
+            <div class="form-group"><label>Rôle</label><input type="text" class="form-input" id="editRole" readonly></div>
+            <div class="form-group"><label>Membre depuis</label><input type="text" class="form-input" id="editJoined" readonly></div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="profileSaveBtn">Enregistrer</button>
+            <button type="button" class="btn-outline" onclick="loadProfileData()">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="section-panel" id="panel-password">
+      <div class="panel-title">Mot de passe</div>
+      <div class="panel-sub">Modifiez votre mot de passe pour sécuriser votre compte</div>
+      <div class="alert" id="pwAlert"></div>
+      <div class="card">
+        <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Changer le mot de passe</div>
+        <form id="passwordForm">
+          <div class="form-group"><label>Mot de passe actuel</label><input type="password" class="form-input" id="oldPassword" placeholder="Votre mot de passe actuel" autocomplete="current-password"></div>
+          <div class="form-group"><label>Nouveau mot de passe</label><input type="password" class="form-input" id="newPassword" placeholder="Min. 8 caractères" autocomplete="new-password"></div>
+          <div class="form-group"><label>Confirmer le nouveau mot de passe</label><input type="password" class="form-input" id="confirmNewPassword" placeholder="Répétez le nouveau mot de passe" autocomplete="new-password"></div>
+          <div class="form-actions"><button type="submit" class="btn-primary">Modifier</button></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MY CARS -->
+    <div class="section-panel" id="panel-cars">
+      <div class="section-header-row">
+        <div>
+          <div class="panel-title" style="margin-bottom:6px;">Mes annonces</div>
+          <div class="panel-sub" style="margin-bottom:0;">Gérez vos véhicules publiés sur iCar</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="refresh-btn" id="refreshCarsBtn" onclick="loadMyCars()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Actualiser
+          </button>
+          <button class="btn-primary" onclick="window.location.href='publish_ad.html'">+ Publier</button>
+        </div>
+      </div>
+      <div id="carsList"><div class="loading"><div class="spin"></div></div></div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="section-panel" id="panel-notifications">
+      <div class="section-header-row">
+        <div>
+          <div class="panel-title" style="margin-bottom:6px;">Notifications</div>
+          <div class="panel-sub" style="margin-bottom:0;">Vos alertes et mises à jour récentes</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="refresh-btn" id="refreshNotifsBtn" onclick="loadNotifications()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Actualiser
+          </button>
+          <button class="btn-outline btn-sm" onclick="markAllRead()">Tout marquer comme lu</button>
+        </div>
+      </div>
+      <div id="notificationsList"><div class="loading"><div class="spin"></div></div></div>
+    </div>
+
+    <!-- FOLLOWS -->
+    <div class="section-panel" id="panel-follows">
+      <div class="section-header-row">
+        <div>
+          <div class="panel-title" style="margin-bottom:6px;">Mes abonnements</div>
+          <div class="panel-sub" style="margin-bottom:0;">Utilisateurs et annonces que vous suivez</div>
+        </div>
+        <button class="refresh-btn" id="refreshFollowsBtn" onclick="loadAllFollows()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Actualiser
+        </button>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchFollowTab('following',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Abonnements</button>
+        <button class="tab-btn" onclick="switchFollowTab('followers',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Abonnés</button>
+        <button class="tab-btn" onclick="switchFollowTab('posts',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 16H9m10 0h3v-3.5L19 9h-3M5 16H3v-3.5L7 9h3M10 9h4"/><rect x="3" y="13" width="18" height="3" rx="1"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg> Annonces suivies</button>
+      </div>
+      <div id="followFollowingPanel"><div class="loading"><div class="spin"></div></div></div>
+      <div id="followFollowersPanel" style="display:none;"><div class="loading"><div class="spin"></div></div></div>
+      <div id="followPostsPanel" style="display:none;"><div class="loading"><div class="spin"></div></div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="section-panel" id="panel-settings">
+      <div class="panel-title">Paramètres</div>
+      <div class="panel-sub">Préférences du compte et sécurité</div>
+      <div class="card">
+        <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Préférences</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+            <div><div style="font-size:14px;font-weight:500;">Mode sombre automatique</div><div style="font-size:12px;color:var(--text-muted);">Suit les préférences du système</div></div>
+            <input type="checkbox" id="autoTheme" style="accent-color:var(--accent);width:18px;height:18px;">
+          </label>
+          <div style="height:1px;background:var(--border);"></div>
+          <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+            <div><div style="font-size:14px;font-weight:500;">Notifications par email</div><div style="font-size:12px;color:var(--text-muted);">Recevez des alertes par email</div></div>
+            <input type="checkbox" checked id="emailNotif" style="accent-color:var(--accent);width:18px;height:18px;">
+          </label>
+        </div>
+      </div>
+      <div class="danger-zone">
+        <div class="danger-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="currentColor" stroke="none"/></svg> Zone dangereuse</div>
+        <div class="danger-desc">La suppression de votre compte est irréversible. Toutes vos annonces, notifications et abonnements seront définitivement supprimés.</div>
+        <button class="btn-danger" onclick="confirmDelete()">Supprimer mon compte</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const AUTH_URL = 'https://api.icaralgerie.com/auth';
+const NOTIF_URL = 'https://api.icaralgerie.com/notifications';
+const CAR_URL = 'https://api.icaralgerie.com/catalog';
+
+// Global state
+let dashboardData = {
+  user: null,
+  cars: [],
+  notifications: [],
+  followingUsers: [],
+  followers: [],
+  followingPosts: [],
+  loading: {
+    profile: true,
+    cars: true,
+    notifications: true,
+    followingUsers: true,
+    followers: true,
+    followingPosts: true
+  }
+};
+
+let currentFollowTab = 'following';
+
+function getToken() { return localStorage.getItem('access_token'); }
+function getUser() { return dashboardData.user || JSON.parse(localStorage.getItem('user') || 'null'); }
+function escapeHtml(s) { if(!s) return '—'; return String(s).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function fmtDate(d) { if(!d) return '—'; return new Date(d).toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'}); }
+function fmtTime(d) { if(!d) return '—'; return new Date(d).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+function emptyState(title, desc) { return `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><h3>${title}</h3><p>${desc}</p></div>`; }
+function showToast(msg, type='success') { const t = document.createElement('div'); t.className = `toast ${type}`; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3500); }
+
+function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+  document.getElementById(`panel-${tab}`).classList.add('active');
+  btn.classList.add('active');
+  
+  if(tab === 'notifications') renderNotifications();
+  if(tab === 'follows') renderFollows();
+  if(tab === 'cars') renderMyCars();
+}
+
+function switchFollowTab(tab, btn) {
+  currentFollowTab = tab;
+  document.querySelectorAll('#panel-follows .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('followFollowingPanel').style.display = tab==='following' ? 'block' : 'none';
+  document.getElementById('followFollowersPanel').style.display = tab==='followers' ? 'block' : 'none';
+  document.getElementById('followPostsPanel').style.display = tab==='posts' ? 'block' : 'none';
+  renderFollows();
+}
+
+// Theme
+function initTheme() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') document.body.classList.add('dark');
+  else if (saved === 'light') document.body.classList.remove('dark');
+  else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (prefersDark) document.body.classList.add('dark');
+  }
+  const cb = document.getElementById('autoTheme');
+  if(cb) cb.checked = !localStorage.getItem('theme');
+}
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  const cb = document.getElementById('autoTheme');
+  if(cb) cb.checked = false;
+});
+
+document.getElementById('autoTheme').addEventListener('change', e => {
+  if(e.target.checked) {
+    localStorage.removeItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    prefersDark ? document.body.classList.add('dark') : document.body.classList.remove('dark');
+  } else {
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  }
+});
+
+// Load all data at once
+async function loadAllDashboardData() {
+  const user = getUser();
+  if(!user?.id) { window.location.href = 'login.html'; return; }
+
+  // Load profile
+  try {
+    const res = await fetch(`${AUTH_URL}/api/profile/`, { headers: { Authorization: getToken() } });
+    if(res.ok) {
+      dashboardData.user = await res.json();
+      localStorage.setItem('user', JSON.stringify(dashboardData.user));
+    }
+  } catch(e) {}
+  dashboardData.loading.profile = false;
+  renderSidebar();
+  renderAccountInfo();
+  renderOverviewStats();
+
+  // Load cars
+  loadMyCarsData();
+  
+  // Load notifications
+  loadNotificationsData();
+  
+  // Load follows
+  loadFollowData();
+}
+
+async function loadMyCarsData() {
+  dashboardData.loading.cars = true;
+  const user = getUser();
+  try {
+    const res = await fetch(`${CAR_URL}/api/vehicules/?user_id=${user?.id}`, { headers:{ Authorization: getToken() } });
+    if(res.ok) {
+      const data = await res.json();
+      dashboardData.cars = data.results || data;
+    }
+  } catch(e) { dashboardData.cars = []; }
+  dashboardData.loading.cars = false;
+  renderMyCars();
+  renderOverviewStats();
+}
+
+async function loadNotificationsData() {
+  dashboardData.loading.notifications = true;
+  const user = getUser();
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/notifications/`, { 
+        "headers": { "Authorization": getToken() } });
+    if(res.ok) {
+      const data = await res.json();
+      dashboardData.notifications = data.results || data;
+    }
+  } catch(e) { dashboardData.notifications = []; }
+  dashboardData.loading.notifications = false;
+  renderNotifications();
+  renderOverviewStats();
+  updateNotifBadge();
+}
+
+async function loadFollowData() {
+  const user = getUser();
+  
+  // Load following
+  dashboardData.loading.followingUsers = true;
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/follow/user/list/?follower=${user?.id}`, { headers: { Authorization: getToken() } });
+    if(res.ok) {
+      const data = await res.json();
+      dashboardData.followingUsers = Array.isArray(data) ? data : (data.results || []);
+    }
+  } catch(e) { dashboardData.followingUsers = []; }
+  dashboardData.loading.followingUsers = false;
+  
+  // Load followers
+  dashboardData.loading.followers = true;
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/follow/user/list/?following=${user?.id}`, { headers: { Authorization: getToken() } });
+    if(res.ok) {
+      const data = await res.json();
+      dashboardData.followers = Array.isArray(data) ? data : (data.results || []);
+    }
+  } catch(e) { dashboardData.followers = []; }
+  dashboardData.loading.followers = false;
+  
+  // Load followed posts
+  dashboardData.loading.followingPosts = true;
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/follow/post/list/?user_id=${user.id}`, { headers: { Authorization: getToken() } });
+    if(res.ok) {
+      const data = await res.json();
+      dashboardData.followingPosts = Array.isArray(data) ? data : (data.results || []);
+    }
+  } catch(e) { dashboardData.followingPosts = []; }
+  dashboardData.loading.followingPosts = false;
+  
+  renderFollows();
+  renderOverviewStats();
+}
+
+function renderOverviewStats() {
+  const cars = dashboardData.cars.length;
+  const following = dashboardData.followingUsers.length;
+  const followers = dashboardData.followers.length;
+  const notifs = dashboardData.notifications.length;
+  
+  document.getElementById('statCars').textContent = cars;
+  document.getElementById('statFollowing').textContent = following;
+  document.getElementById('statFollowers').textContent = followers;
+  document.getElementById('statNotifs').textContent = notifs;
+}
+
+function renderSidebar() {
+  const u = dashboardData.user || getUser();
+  if(!u) return;
+  document.getElementById('sidebarName').textContent = u.name || '—';
+  document.getElementById('sidebarEmail').textContent = u.email || '—';
+  document.getElementById('sidebarRole').innerHTML = (u.role==='admin' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2z"/></svg> Administrateur' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Utilisateur');
+  document.getElementById('welcomeName').textContent = (u.name||'vous').split(' ')[0];
+  fillProfileForm();
+}
+
+function renderAccountInfo() {
+  const u = dashboardData.user || getUser();
+  if(!u) return;
+  document.getElementById('accountInfo').innerHTML = `
+    <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Nom</div><div style="font-size:15px;font-weight:500;">${escapeHtml(u.name)}</div></div>
+    <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Email</div><div style="font-size:15px;">${escapeHtml(u.email)}</div></div>
+    <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Téléphone</div><div style="font-size:15px;">${escapeHtml(u.number)||'Non renseigné'}</div></div>
+    <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Rôle</div><div style="font-size:15px;">${u.role==='admin'?'Administrateur':'Utilisateur'}</div></div>
+    <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Membre depuis</div><div style="font-size:15px;">${fmtDate(u.date_joined)}</div></div>
+    <div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Dernière connexion</div><div style="font-size:15px;">${fmtDate(u.last_login)}</div></div>`;
+}
+
+function fillProfileForm() {
+  const u = dashboardData.user || getUser();
+  if(!u) return;
+  document.getElementById('editName').value = u.name || '';
+  document.getElementById('editEmail').value = u.email || '';
+  document.getElementById('editNumber').value = u.number || '';
+  document.getElementById('editRole').value = u.role==='admin' ? 'Administrateur' : 'Utilisateur';
+  document.getElementById('editJoined').value = fmtDate(u.date_joined);
+}
+
+function renderMyCars() {
+  const el = document.getElementById('carsList');
+  const cars = dashboardData.cars;
+  
+  if(dashboardData.loading.cars) {
+    el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
+    return;
+  }
+  
+  if(!cars.length) {
+    el.innerHTML = emptyState('Aucune annonce', 'Publiez votre première annonce et trouvez un acheteur rapidement.');
+    return;
+  }
+  
+  el.innerHTML = `<div class="my-cars-grid">${cars.map(c => `
+    <div class="my-car-card">
+      <div class="my-car-img">
+      <img src=${c.images[0].image_url}/>
+      </div>
+      <div class="my-car-body">
+        <div class="my-car-name">${escapeHtml(c.brand||'')} ${escapeHtml(c.name||'Annonce')}</div>
+        <div class="my-car-meta">${c.year||'—'} · ${escapeHtml(c.fuel||'—')} · ${c.price ? Number(c.price).toLocaleString('fr-DZ')+' DA' : '—'}</div>
+        <div class="my-car-stats">
+          <div class="my-car-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <strong>${(c.views||0).toLocaleString()}</strong></div>
+        </div>
+        <div class="my-car-actions">
+          <button class="btn-outline btn-sm" onclick="editCar(${c.id})">Modifier</button>
+          <button class="btn-danger btn-sm" onclick="deleteCar(${c.id})">Supprimer</button>
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function renderNotifications() {
+  const el = document.getElementById('notificationsList');
+  const notifs = dashboardData.notifications;
+  
+  if(dashboardData.loading.notifications) {
+    el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
+    return;
+  }
+  
+  if(!notifs.length) {
+    el.innerHTML = emptyState('Aucune notification', "Vous n'avez pas encore de notifications.");
+    return;
+  }
+  
+  el.innerHTML = `<div class="notif-list">${notifs.map(n => notifCard(n)).join('')}</div>`;
+  
+  makeNotificationsClickable();
+}
+
+function notifCard(n) {
+  return `<div class="notif-item ${n.is_read ? 'read' : 'unread'}" id="notif-${n.id}">${!n.is_read ? '<div class="unread-dot"></div>' : ''}<div class="notif-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div class="notif-content"><div class="notif-title">${escapeHtml(n.title || 'Notification')}</div><div class="notif-text">${escapeHtml(n.message || '')}</div><div class="notif-time">${fmtTime(n.created_at)}</div></div><div class="notif-actions">${!n.is_read ? `<button class="icon-btn" onclick="markRead(${n.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></button>` : ''}<button class="icon-btn danger" onclick="deleteNotif(${n.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button></div></div>`;
+}
+
+function renderFollows() {
+  if(currentFollowTab === 'following') renderFollowingUsers();
+  else if(currentFollowTab === 'followers') renderFollowers();
+  else renderFollowingPosts();
+}
+
+function renderFollowingUsers() {
+  const el = document.getElementById('followFollowingPanel');
+  const items = dashboardData.followingUsers;
+  
+  if(dashboardData.loading.followingUsers) {
+    el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
+    return;
+  }
+  
+  if(!items.length) {
+    el.innerHTML = emptyState('Aucun abonnement', "Vous ne suivez encore aucun utilisateur.");
+    return;
+  }
+  
+  el.innerHTML = `<div class="follows-list">${items.map(relation => {
+    const followedUser = relation.following || relation.followed_user || {};
+    return `<div class="follow-item" id="follow-user-${relation.id}" style="cursor:pointer;" onclick="window.location.href='https://app.icaralgerie.com/user?id=${followedUser.id}'">
+      <div class="follow-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div class="follow-info"><div class="follow-name">${escapeHtml(followedUser.name || 'Utilisateur')}</div><div class="follow-sub">${escapeHtml(followedUser.email) || '—'}</div></div>
+      <button class="btn-unfollow" onclick="event.stopPropagation(); unfollowUser(${getUser()?.id}, ${followedUser.id}, ${relation.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Se désabonner</button>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderFollowers() {
+  const el = document.getElementById('followFollowersPanel');
+  const items = dashboardData.followers;
+  
+  if(dashboardData.loading.followers) {
+    el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
+    return;
+  }
+  
+  if(!items.length) {
+    el.innerHTML = emptyState('Aucun abonné', "Personne ne vous suit encore.");
+    return;
+  }
+  
+  el.innerHTML = `<div class="follows-list">${items.map(relation => {
+    const follower = relation.follower || relation.following_user || {};
+    return `<div class="follow-item" style="cursor:pointer;" onclick="window.location.href='https://app.icaralgerie.com/user?id=${follower.id}'">
+      <div class="follow-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div class="follow-info"><div class="follow-name">${escapeHtml(follower.name || 'Utilisateur')}</div><div class="follow-sub">${escapeHtml(follower.email) || '—'}</div></div>
+    </div>`;
+  }).join('')}</div>`;
+  
+  document.getElementById('statFollowers').textContent = items.length;
+}
+
+
+function renderFollowingPosts() {
+  const el = document.getElementById('followPostsPanel');
+  const items = dashboardData.followingPosts;
+  
+  if(dashboardData.loading.followingPosts) {
+    el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
+    return;
+  }
+  
+  if(!items.length) {
+    el.innerHTML = emptyState('Aucune annonce suivie', "Vous ne suivez encore aucune annonce.");
+    return;
+  }
+  
+  el.innerHTML = `<div class="follows-list">${items.map(f => {
+    const post = f.post || {};
+    return `<div class="post-follow-item" id="follow-post-${f.id}" style="cursor:pointer;" onclick="window.location.href='https://app.icaralgerie.com/detaille_annonce?id=${post.id}'">
+      <div class="post-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 16H9m10 0h3v-3.5L19 9h-3M5 16H3v-3.5L7 9h3M10 9h4"/><rect x="3" y="13" width="18" height="3" rx="1"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg></div>
+      <div class="post-info"><div class="post-title">${escapeHtml(post.brand || '')} ${escapeHtml(post.name || `Annonce #${post.id}`)}</div><div class="post-sub">${post.year ? post.year + ' · ' : ''}${post.price ? Number(post.price).toLocaleString('fr-DZ') + ' DA' : ''}</div></div>
+      <button class="btn-unfollow" onclick="event.stopPropagation(); unfollowPost(${getUser()?.id}, ${post.id}, ${f.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Ne plus suivre</button>
+    </div>`;
+  }).join('')}</div>`;
+}
+function updateNotifBadge() {
+  const unread = dashboardData.notifications.filter(n => !n.is_read).length;
+  const badge = document.getElementById('notifBadge');
+  if(unread > 0) { badge.textContent = unread; badge.style.display = 'inline'; }
+  else badge.style.display = 'none';
+}
+
+// Refresh functions
+async function loadMyCars() {
+  const btn = document.getElementById('refreshCarsBtn');
+  btn.classList.add('spinning');
+  await loadMyCarsData();
+  setTimeout(() => btn.classList.remove('spinning'), 800);
+  showToast('Annonces actualisées');
+}
+
+async function loadNotifications() {
+  const btn = document.getElementById('refreshNotifsBtn');
+  btn.classList.add('spinning');
+  await loadNotificationsData();
+  setTimeout(() => btn.classList.remove('spinning'), 800);
+  showToast('Notifications actualisées');
+}
+
+async function loadAllFollows() {
+  const btn = document.getElementById('refreshFollowsBtn');
+  btn.classList.add('spinning');
+  await loadFollowData();
+  setTimeout(() => btn.classList.remove('spinning'), 800);
+  showToast('Abonnements actualisés');
+}
+
+async function loadProfileData() {
+  const user = getUser();
+  try {
+    const res = await fetch(`${AUTH_URL}/api/profile/`, { headers: { Authorization: getToken() } });
+    if(res.ok) {
+      dashboardData.user = await res.json();
+      localStorage.setItem('user', JSON.stringify(dashboardData.user));
+      renderSidebar();
+      renderAccountInfo();
+    }
+  } catch(e) {}
+  showToast('Profil actualisé');
+}
+
+// Profile Form
+document.getElementById('profileForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('profileSaveBtn');
+  btn.disabled = true; btn.innerHTML = 'Enregistrement...';
+  const alertEl = document.getElementById('profileAlert');
+  try {
+    const user = getUser();
+    const res = await fetch(`${AUTH_URL}/api/users/${user?.id}/`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': getToken() },
+      body: JSON.stringify({ name: document.getElementById('editName').value, email: document.getElementById('editEmail').value, number: document.getElementById('editNumber').value })
+    });
+    const data = await res.json();
+    if(res.ok) {
+      dashboardData.user = { ...user, ...data };
+      localStorage.setItem('user', JSON.stringify(dashboardData.user));
+      alertEl.textContent = 'Profil mis à jour avec succès !'; alertEl.className = 'alert success show';
+      renderSidebar(); renderAccountInfo();
+      showToast('Profil mis à jour !', 'success');
+    } else { alertEl.textContent = 'Erreur: ' + (data.error || data.detail || 'Vérifiez les champs'); alertEl.className = 'alert error show'; }
+  } catch(e) { alertEl.textContent = 'Erreur réseau'; alertEl.className = 'alert error show'; }
+  finally { btn.disabled = false; btn.innerHTML = 'Enregistrer'; }
+});
+
+// Password Form
+document.getElementById('passwordForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const alertEl = document.getElementById('pwAlert');
+  const np = document.getElementById('newPassword').value;
+  const cp = document.getElementById('confirmNewPassword').value;
+  if(np !== cp) { alertEl.textContent='Les mots de passe ne correspondent pas.'; alertEl.className='alert error show'; return; }
+  if(np.length < 8) { alertEl.textContent='Le mot de passe doit contenir au moins 8 caractères.'; alertEl.className='alert error show'; return; }
+  try {
+    const res = await fetch(`${AUTH_URL}/api/change-password/`, {
+      method:'POST', headers:{'Content-Type':'application/json', Authorization: getToken()},
+      body: JSON.stringify({ old_password: document.getElementById('oldPassword').value, new_password: np, confirm_password: cp })
+    });
+    const data = await res.json();
+    if(res.ok) { alertEl.textContent='Mot de passe changé avec succès !'; alertEl.className='alert success show'; document.getElementById('passwordForm').reset(); showToast('Mot de passe modifié', 'success'); }
+    else { alertEl.textContent='Erreur: ' + (data.error || data.detail || 'Mot de passe incorrect'); alertEl.className='alert error show'; }
+  } catch(e) { alertEl.textContent='Erreur réseau.'; alertEl.className='alert error show'; }
+});
+
+// Notification actions
+async function markRead(id) {
+  try { 
+    await fetch(`${NOTIF_URL}/api/notifications/${id}/read/`, { method:'PATCH', headers:{ Authorization: getToken() } }); 
+    const n = dashboardData.notifications.find(n => n.id === id);
+    if(n) n.is_read = true;
+    renderNotifications();
+    updateNotifBadge();
+    showToast('Notification marquée comme lue'); 
+  } catch(e) { showToast('Erreur','error'); }
+}
+
+async function markAllRead() {
+  try { 
+    await fetch(`${NOTIF_URL}/api/notifications/read-all/`, { method:'POST', headers:{ Authorization: getToken() } }); 
+    dashboardData.notifications.forEach(n => n.is_read = true);
+    renderNotifications();
+    updateNotifBadge();
+    showToast('Toutes marquées comme lues'); 
+  } catch(e) { showToast('Erreur','error'); }
+}
+
+async function deleteNotif(id) {
+  try { 
+    await fetch(`${NOTIF_URL}/api/notifications/${id}/`, { method:'DELETE', headers:{ Authorization: getToken() } }); 
+    dashboardData.notifications = dashboardData.notifications.filter(n => n.id !== id);
+    document.getElementById(`notif-${id}`)?.remove();
+    renderOverviewStats();
+    updateNotifBadge();
+    showToast('Notification supprimée'); 
+  } catch(e) { showToast('Erreur','error'); }
+}
+
+// Follow actions
+async function unfollowUser(followerId, followingId, relationId) {
+  if(!confirm('Se désabonner de cet utilisateur ?')) return;
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/unfollow/user/`, { method:'DELETE', headers:{ 'Content-Type':'application/json', Authorization: getToken() }, body: JSON.stringify({ follower: followerId, following: followingId }) });
+    if(res.ok || res.status === 204) { 
+      dashboardData.followingUsers = dashboardData.followingUsers.filter(f => f.id !== relationId);
+      document.getElementById(`follow-user-${relationId}`)?.remove();
+      renderOverviewStats();
+      showToast('Désabonnement réussi', 'success');
+      if(dashboardData.followingUsers.length === 0) document.getElementById('followFollowingPanel').innerHTML = emptyState('Aucun abonnement', "Vous ne suivez encore aucun utilisateur.");
+    } else showToast('Impossible de se désabonner', 'error');
+  } catch(e) { showToast('Erreur réseau', 'error'); }
+}
+
+async function unfollowPost(userId, postId, relationId) {
+  if(!confirm('Ne plus suivre cette annonce ?')) return;
+  try {
+    const res = await fetch(`${NOTIF_URL}/api/unfollow/post/`, { method:'DELETE', headers:{ 'Content-Type':'application/json', Authorization: getToken() }, body: JSON.stringify({ user: userId, post: postId }) });
+    if(res.ok || res.status === 204) { 
+      dashboardData.followingPosts = dashboardData.followingPosts.filter(f => f.id !== relationId);
+      document.getElementById(`follow-post-${relationId}`)?.remove();
+      showToast('Annonce retirée de vos abonnements', 'success');
+      if(dashboardData.followingPosts.length === 0) document.getElementById('followPostsPanel').innerHTML = emptyState('Aucune annonce suivie', "Vous ne suivez encore aucune annonce.");
+    } else showToast('Impossible de se désabonner', 'error');
+  } catch(e) { showToast('Erreur réseau', 'error'); }
+}
+
+// Car actions
+function editCar(id) { window.location.href = `edit_car.html?id=${id}`; }
+async function deleteCar(id) {
+  if(!confirm('Supprimer définitivement cette annonce ?')) return;
+  try { 
+    await fetch(`${CAR_URL}/api/vehicules/${id}/`, { method:'DELETE', headers:{ Authorization: getToken() } }); 
+    dashboardData.cars = dashboardData.cars.filter(c => c.id !== id);
+    renderMyCars();
+    renderOverviewStats();
+    showToast('Annonce supprimée'); 
+  } catch(e) { showToast('Erreur réseau', 'error'); }
+}
+
+async function confirmDelete() {
+  if(!confirm('⚠️ Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return;
+  try {
+    const res = await fetch(`${AUTH_URL}/api/users/me/delete/`, { method:'DELETE', headers:{ Authorization: getToken() } });
+    if(res.ok) { localStorage.clear(); window.location.href='index.html'; }
+    else showToast('Impossible de supprimer le compte','error');
+  } catch(e) { showToast('Erreur réseau','error'); }
+}
+
+// Init
+(function init() {
+  initTheme();
+  const token = getToken();
+  if(!token) { window.location.href='login.html'; return; }
+  loadAllDashboardData();
+})();
+
+
+
+
+
+// Make notification items clickable based on their type
+function makeNotificationsClickable() {
+  const notifItems = document.querySelectorAll('.notif-item');
+  notifItems.forEach(item => {
+    // Remove old click handler by setting onclick to null first
+    item.onclick = null;
+    
+    // Add cursor pointer
+    item.style.cursor = 'pointer';
+    
+    // Add single click handler
+    item.addEventListener('click', function(e) {
+        
+        
+        
+      // Don't trigger if clicking on action buttons (mark read, delete)
+      if (e.target.closest('.notif-actions') || e.target.closest('.icon-btn')) {
+        return;
+      }
+      
+      const notifId = parseInt(this.id.replace('notif-', ''));
+      
+      console.log("click = ",notifId)
+      
+      const notification = dashboardData.notifications.find(n => n.id === notifId);
+      
+      if (!notification) return;
+      
+      console.log(notification)
+      
+      const type = notification.type || notification.notification_type || '';
+      
+      console.log("type = ",type)
+
+      
+      // Handle different notification types
+      if (type == "follow_user") {
+        const followerId = notification.follower?.id || notification.follower
+        if (followerId) {
+          window.location.href = `https://app.icaralgerie.com/user?id=${followerId}`;
+        }
+      } else if (type == "follow_post" || type == "post") {
+        const postId = notification.post?.id || notification.post;
+        if (postId) {
+          window.location.href = `https://app.icaralgerie.com/detaille_annonce?id=${postId}`;
+        }
+      }
+    });
+  });
+}
+
+
+// Helper to get notification type
+function getNotificationType(item) {
+  const notifId = parseInt(item.id.replace('notif-', ''));
+  const notification = dashboardData.notifications.find(n => n.id === notifId);
+  if (!notification) return '';
+  return notification.type || notification.notification_type || '';
+}
+
+
+
+
+</script>
+</body> 
+</html>

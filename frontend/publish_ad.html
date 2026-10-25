@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iCar — Publier une annonce</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-elevated: #f1f5f9;
+    --border: #e2e8f0;
+    --text-primary: #002d8f;
+    --text-secondary: #0e2546;
+    --text-muted: #081e3d;
+    --accent: #07153a;
+    --accent-dark: #20283e;
+    --accent-soft: #dbeafe;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.03);
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.08);
+    --radius-card: 24px;
+    --radius-sm: 14px;
+    --transition: all 0.2s ease;
+    --error: #dc2626;
+    --success: #10b981;
+  }
+
+  body.dark {
+    --bg: #0b1120;
+    --surface: #111827;
+    --surface-elevated: #1e293b;
+    --border: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-dark: #2563eb;
+    --accent-soft: #1e2a3e;
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.5);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.2s;
+    min-height: 100vh;
+  }
+
+  /* Navbar - Matching user page style */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 57px;
+    backdrop-filter: blur(20px);
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+  }
+  body.dark .navbar { background: color-mix(in srgb, #0b1120 85%, transparent); }
+
+  .nav-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    gap: 16px;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    flex-shrink: 0;
+  }
+  .back-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .back-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .logo-symbol {
+    width: 29px;
+    height: 29px;
+    background: var(--accent);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 20px;
+    color: white;
+  }
+  .logo-text {
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+  }
+  .logo-text span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  .theme-toggle {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 8px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: var(--transition);
+  }
+  .theme-toggle:hover { background: var(--accent-soft); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+  .btn-outline:hover { background: var(--accent-soft); }
+
+  .btn-primary {
+    background: var(--accent);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+  .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Page */
+  .page-wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+  .page-header { margin-bottom: 32px; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .page-title { font-size: 28px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.5px; }
+  .page-sub { color: var(--text-muted); font-size: 14px; }
+
+  .steps { display: flex; align-items: center; gap: 0; margin-bottom: 36px; }
+  .step { display: flex; align-items: center; gap: 10px; flex: 1; }
+  .step-num {
+    width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+    font-weight: 700; color: var(--text-muted); flex-shrink: 0; transition: all .3s;
+  }
+  .step.active .step-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .step.done .step-num { background: var(--success); border-color: var(--success); color: #fff; }
+  .step-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .step.active .step-label { color: var(--text-primary); }
+  .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 12px; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+  }
+  .card-title svg { width: 20px; height: 20px; stroke: var(--accent); stroke-width: 1.5; }
+  .card-sub { color: var(--text-muted); font-size: 13px; margin-bottom: 24px; }
+
+  /* Form */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-group { margin-bottom: 0; }
+  .form-group.full { grid-column: 1/-1; }
+  label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 7px; font-weight: 500; }
+  label .req { color: var(--accent); }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: var(--transition);
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(54, 78, 129, 0.1);
+  }
+  .form-input.error, .form-select.error { border-color: var(--error); }
+  .form-textarea { resize: vertical; min-height: 110px; }
+  .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
+  .form-select option { background: var(--surface); color: var(--text-primary); }
+  .field-error { font-size: 11px; color: var(--error); margin-top: 5px; display: none; }
+  .field-error.show { display: block; }
+
+  .price-input-wrap { position: relative; }
+  .price-input-wrap .form-input { padding-right: 50px; }
+  .price-suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text-muted); font-weight: 600; pointer-events: none; }
+
+  /* Category Picker */
+  .cat-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-top: 12px; }
+  .cat-item {
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    padding: 12px 6px; border-radius: 14px; border: 2px solid var(--border);
+    cursor: pointer; transition: all 0.2s; background: var(--surface-elevated); text-align: center;
+  }
+  .cat-item:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .cat-item.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .cat-item .cat-img {
+    width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
+    background: var(--surface); display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border); flex-shrink: 0;
+  }
+  .cat-item .cat-img img { width: 100%; height: 100%; object-fit: cover; }
+  .cat-item .cat-name { font-size: 11px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+
+  .subcat-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; margin-top: 12px; }
+  .subcat-item {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 12px 8px; border-radius: 14px; border: 2px solid var(--border);
+    cursor: pointer; transition: all 0.2s; background: var(--surface-elevated); text-align: center;
+  }
+  .subcat-item:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .subcat-item.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .subcat-item .sub-img {
+    width: 64px; height: 64px; border-radius: 50%; overflow: hidden;
+    background: var(--surface); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);
+  }
+  .subcat-item .sub-img img { width: 100%; height: 100%; object-fit: cover; }
+  .subcat-item .sub-name { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+
+  .subcat-loading { text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px; display: none; }
+  .subcat-loading.show { display: block; }
+
+  /* Image Upload */
+  .upload-area {
+    border: 2px dashed var(--border); border-radius: 14px; padding: 32px;
+    text-align: center; cursor: pointer; transition: all .2s; background: var(--surface-elevated);
+  }
+  .upload-area:hover, .upload-area.drag-over { border-color: var(--accent); background: var(--accent-soft); }
+  .upload-area svg { width: 32px; height: 32px; stroke: var(--text-muted); margin-bottom: 10px; }
+  .upload-area p { color: var(--text-muted); font-size: 14px; }
+  .upload-area p strong { color: var(--accent); }
+  .upload-area input[type=file] { display: none; }
+
+  .images-preview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+  .img-thumb {
+    position: relative; aspect-ratio: 4/3; border-radius: 12px; overflow: hidden;
+    border: 2px solid var(--border); background: var(--surface-elevated);
+  }
+  .img-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .img-thumb .img-remove {
+    position: absolute; top: 8px; right: 8px; width: 28px; height: 28px;
+    background: rgba(0,0,0,0.7); border: none; border-radius: 50%;
+    color: #fff; font-size: 12px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; transition: all .2s;
+    font-family: 'Inter', sans-serif; font-weight: 700;
+  }
+  .img-thumb .img-remove:hover { background: var(--error); }
+  .img-thumb.primary-thumb { border-color: var(--accent); }
+  .img-thumb .primary-badge {
+    position: absolute; bottom: 8px; left: 8px; background: var(--accent);
+    color: #fff; font-size: 10px; padding: 3px 10px; border-radius: 20px; font-weight: 600;
+  }
+  .img-set-primary {
+    position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 20px;
+    color: #fff; font-size: 10px; padding: 3px 8px; cursor: pointer;
+    display: none; font-family: 'Inter', sans-serif;
+  }
+  .img-thumb:hover .img-set-primary { display: block; }
+
+  .form-actions-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);
+    flex-wrap: wrap; gap: 16px;
+  }
+
+  .tip-box {
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 14px; padding: 14px 18px; display: flex; align-items: flex-start;
+    gap: 12px; margin-bottom: 20px;
+  }
+  .tip-box svg { width: 18px; height: 18px; stroke: var(--accent); flex-shrink: 0; margin-top: 2px; }
+  .tip-box p { color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+
+  /* Alert */
+  .alert {
+    padding: 14px 18px; border-radius: 12px; font-size: 14px;
+    display: none; margin-bottom: 20px; align-items: center; gap: 10px;
+  }
+  .alert.show { display: flex; }
+  .alert.success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--success); }
+  .alert.error { background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3); color: var(--error); }
+
+  .spin {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+    border-radius: 50%; animation: spin .7s linear infinite;
+    margin-right: 8px; vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 12px;
+    font-size: 14px; font-weight: 500; z-index: 9999; animation: slideUp .3s ease;
+    background: var(--surface); border-left: 4px solid var(--accent);
+    color: var(--text-primary); box-shadow: var(--shadow-md);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.success { border-left-color: var(--success); }
+  .toast.error { border-left-color: var(--error); }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media(max-width:768px) {
+    .navbar { padding: 0 20px; }
+    .page-wrap { padding: 24px 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .images-preview { grid-template-columns: repeat(2, 1fr); }
+    .step-label { display: none; }
+    .cat-picker { grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); }
+    .subcat-picker { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-container">
+    <div class="nav-left">
+      <button class="back-btn" onclick="history.back()" title="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <a href="index.html" class="logo">
+        <div class="logo-symbol">I</div>
+        <div class="logo-text">I<span>car</span></div>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="recherche.html">Recherche</a>
+      <button class="theme-toggle" id="themeToggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>
+        <span>Thème</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Accueil</a>
+      <span>›</span>
+      <a href="profile.html">Mon profil</a>
+      <span>›</span>
+      <span>Publier une annonce</span>
+    </div>
+    <div class="page-title">Publier une annonce</div>
+    <div class="page-sub">Décrivez votre véhicule en détail pour attirer les acheteurs sérieux</div>
+  </div>
+
+  <div class="steps">
+    <div class="step active" id="step1"><div class="step-num">1</div><div class="step-label">Informations</div></div>
+    <div class="step-line"></div>
+    <div class="step" id="step2"><div class="step-num">2</div><div class="step-label">Photos</div></div>
+    <div class="step-line"></div>
+    <div class="step" id="step3"><div class="step-num">3</div><div class="step-label">Contact</div></div>
+  </div>
+
+  <div class="alert" id="mainAlert"></div>
+
+  <!-- STEP 1 -->
+  <div id="formStep1">
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        Catégorie
+      </div>
+      <div class="card-sub">Choisissez la catégorie de votre véhicule</div>
+
+      <input type="hidden" id="category">
+      <input type="hidden" id="subcategory">
+
+      <div id="catPickerLoading" class="subcat-loading show">
+        <span class="spin"></span> Chargement des catégories...
+      </div>
+      <div class="cat-picker" id="catPicker"></div>
+      <div class="field-error" id="err-category">La catégorie est requise</div>
+
+      <div id="subcatSection" style="margin-top: 24px; display: none;">
+        <label style="margin-bottom: 10px; display: block; font-size: 13px; color: var(--text-muted); font-weight: 500;">
+          Sous-catégorie <span class="req">*</span>
+        </label>
+        <div id="subcatPickerLoading" class="subcat-loading">
+          <span class="spin"></span> Chargement des sous-catégories...
+        </div>
+        <div class="subcat-picker" id="subcatPicker"></div>
+        <div class="field-error" id="err-subcategory">La sous-catégorie est requise</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 16H9m10 0h3v-3.5L19 9h-3M5 16H3v-3.5L7 9h3M10 9h4"/><rect x="3" y="13" width="18" height="3" rx="1"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
+        Informations du véhicule
+      </div>
+      <div class="card-sub">Renseignez les caractéristiques principales de votre véhicule</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Marque <span class="req">*</span></label><input type="text" class="form-input" id="brand" placeholder="Ex: Toyota, BMW…"><div class="field-error" id="err-brand">Requis</div></div>
+        <div class="form-group"><label>Modèle <span class="req">*</span></label><input type="text" class="form-input" id="vehicleName" placeholder="Ex: Camry, X5…"><div class="field-error" id="err-vehicleName">Requis</div></div>
+        <div class="form-group"><label>Année <span class="req">*</span></label><input type="number" class="form-input" id="year" min="1970" max="2026"><div class="field-error" id="err-year">Requis</div></div>
+        <div class="form-group"><label>Carburant <span class="req">*</span></label><select class="form-select" id="fuel"><option value="">Sélectionner…</option><option value="essence">Essence</option><option value="diesel">Diesel</option><option value="hybrid">Hybride</option><option value="electric">Électrique</option></select><div class="field-error" id="err-fuel">Requis</div></div>
+        <div class="form-group"><label>Transmission <span class="req">*</span></label><select class="form-select" id="transmission"><option value="">Sélectionner…</option><option value="MANUAL">Manuelle</option><option value="CVT">CVT</option><option value="AUTOMATIC">Automatique</option></select><div class="field-error" id="err-transmission">Requis</div></div>
+        <div class="form-group"><label>Kilométrage <span class="req">*</span></label><div class="price-input-wrap"><input type="number" class="form-input" id="milage" min="0"><span class="price-suffix">km</span></div><div class="field-error" id="err-milage">Requis</div></div>
+        <div class="form-group"><label>Prix <span class="req">*</span></label><div class="price-input-wrap"><input type="number" class="form-input" id="price" min="0"><span class="price-suffix">DA</span></div><div class="field-error" id="err-price">Requis</div></div>
+        <div class="form-group">
+            <label>Wilaya <span class="req">*</span></label>
+            
+            <select class="form-select" id="location">
+  <option value="">Sélectionner…</option>
+  <option>Adrar</option>
+  <option>Chlef</option>
+  <option>Laghouat</option>
+  <option>Oum El Bouaghi</option>
+  <option>Batna</option>
+  <option>Béjaïa</option>
+  <option>Biskra</option>
+  <option>Béchar</option>
+  <option>Blida</option>
+  <option>Bouira</option>
+  <option>Tamanrasset</option>
+  <option>Tébessa</option>
+  <option>Tlemcen</option>
+  <option>Tiaret</option>
+  <option>Tizi Ouzou</option>
+  <option>Alger</option>
+  <option>Djelfa</option>
+  <option>Jijel</option>
+  <option>Sétif</option>
+  <option>Saïda</option>
+  <option>Skikda</option>
+  <option>Sidi Bel Abbès</option>
+  <option>Annaba</option>
+  <option>Guelma</option>
+  <option>Constantine</option>
+  <option>Médéa</option>
+  <option>Mostaganem</option>
+  <option>M'Sila</option>
+  <option>Mascara</option>
+  <option>Ouargla</option>
+  <option>Oran</option>
+  <option>El Bayadh</option>
+  <option>Illizi</option>
+  <option>Bordj Bou Arréridj</option>
+  <option>Boumerdès</option>
+  <option>El Tarf</option>
+  <option>Tindouf</option>
+  <option>Tissemsilt</option>
+  <option>El Oued</option>
+  <option>Khenchela</option>
+  <option>Souk Ahras</option>
+  <option>Tipaza</option>
+  <option>Mila</option>
+  <option>Aïn Defla</option>
+  <option>Naâma</option>
+  <option>Aïn Témouchent</option>
+  <option>Ghardaïa</option>
+  <option>Relizane</option>
+  <option>Timimoun</option>
+  <option>Bordj Badji Mokhtar</option>
+  <option>Ouled Djellal</option>
+  <option>Béni Abbès</option>
+  <option>In Salah</option>
+  <option>In Guezzam</option>
+  <option>Touggourt</option>
+  <option>Djanet</option>
+  <option>El Meghaier</option>
+  <option>El Meniaa</option>
+</select>
+            
+            <div class="field-error" id="err-location">Requis</div></div>
+        <div class="form-group"><label>Couleur</label><input type="text" class="form-input" id="color" placeholder="Ex: Blanc, Noir…"></div>
+        <div class="form-group full"><label>Description <span class="req">*</span></label><textarea class="form-textarea" id="description" placeholder="Décrivez votre véhicule…"></textarea><div class="field-error" id="err-description">Requis</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;">
+      <button class="btn-primary" onclick="goToStep2()">Suivant : Photos</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="formStep2" style="display:none;">
+    <div class="tip-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>
+      <p>Les annonces avec au moins <strong>3 photos</strong> reçoivent 5× plus de vues. La première photo sera l'image principale.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Photos du véhicule
+      </div>
+      <div class="card-sub">Ajoutez jusqu'à 8 photos (JPG, PNG — max 5 Mo)</div>
+
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" multiple accept="image/*" onchange="handleFiles(this.files)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M12 22v-6M2 12h6M22 12h-6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/><circle cx="12" cy="12" r="3"/></svg>
+        <p><strong>Cliquez</strong> ou glissez vos photos ici</p>
+        <p style="font-size:12px;margin-top:4px;">PNG, JPG — max 5 Mo par fichier</p>
+      </div>
+      <div class="images-preview" id="imagesPreview"></div>
+    </div>
+
+    <div class="form-actions-bar">
+      <button class="btn-outline" onclick="goToStep1()">← Retour</button>
+      <button class="btn-primary" onclick="goToStep3()">Suivant : Contact</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="formStep3" style="display:none;">
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Coordonnées de contact
+      </div>
+      <div class="card-sub">Ces informations seront visibles par les acheteurs</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Numéro de téléphone <span class="req">*</span></label><input type="tel" class="form-input" id="phone" placeholder="0551 23 45 67"><div class="field-error" id="err-phone">Requis</div></div>
+        <div class="form-group"><label>WhatsApp</label><input type="tel" class="form-input" id="whatsapp" placeholder="Même numéro ou autre"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Récapitulatif
+      </div>
+      <div id="recapContent" style="color:var(--text-muted);font-size:14px;line-height:1.8;"></div>
+    </div>
+
+    <div class="form-actions-bar">
+      <button class="btn-outline" onclick="goToStep2()">← Retour</button>
+      <button class="btn-primary" id="publishBtn" onclick="publishAd()">Publier l'annonce</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = 'https://api.icaralgerie.com/catalog/api';
+let uploadedImages = [];
+let primaryIndex = 0;
+let categoriesData = [];
+let selectedCategoryId = null;
+let selectedSubcategoryId = null;
+let selectedCategoryName = '';
+let selectedSubcategoryName = '';
+
+function getToken() { return localStorage.getItem('access_token'); }
+function getUser() { return JSON.parse(localStorage.getItem('user') || '{}'); }
+
+// Theme
+(function initTheme() {
+  const saved = localStorage.getItem('theme');
+  if(saved === 'dark') document.body.classList.add('dark');
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  });
+})();
+
+// Load categories
+async function loadCategories() {
+  try {
+    const res = await fetch(`${API_BASE}/categories/`);
+    categoriesData = await res.json();
+    document.getElementById('catPickerLoading').classList.remove('show');
+    const picker = document.getElementById('catPicker');
+    picker.innerHTML = '';
+    categoriesData.forEach(cat => {
+      const imgUrl = cat.image ? (cat.image.startsWith('http') ? cat.image : `https://api.icaralgerie.com${cat.image}`) : null;
+      const item = document.createElement('div');
+      item.className = 'cat-item';
+      item.dataset.catId = cat.id;
+      item.dataset.catName = cat.name;
+      item.innerHTML = `<div class="cat-img">${imgUrl ? `<img src="${imgUrl}" alt="${cat.name}" onerror="this.parentElement.innerHTML='<span style=font-size:26px>🚗</span>'">` : '<span style="font-size:26px;">🚗</span>'}</div><div class="cat-name">${cat.name}</div>`;
+      item.addEventListener('click', () => selectCategory(cat.id, cat.name, item));
+      picker.appendChild(item);
+    });
+  } catch(e) { showToast('Erreur chargement catégories', 'error'); }
+}
+
+function selectCategory(catId, catName, itemEl) {
+  selectedCategoryId = catId;
+  selectedCategoryName = catName;
+  document.getElementById('category').value = catId;
+  document.getElementById('err-category').classList.remove('show');
+  document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('selected'));
+  itemEl.classList.add('selected');
+  selectedSubcategoryId = null;
+  document.getElementById('subcategory').value = '';
+  document.getElementById('subcatSection').style.display = 'block';
+  loadSubcategories(catId);
+}
+
+async function loadSubcategories(categoryId) {
+  const loading = document.getElementById('subcatPickerLoading');
+  const picker = document.getElementById('subcatPicker');
+  loading.classList.add('show');
+  picker.innerHTML = '';
+  try {
+    const res = await fetch(`${API_BASE}/subcategories/?categorie_id=${categoryId}`);
+    const subData = await res.json();
+    loading.classList.remove('show');
+    if(!subData.length) { picker.innerHTML = '<p style="color:var(--text-muted);padding:12px;">Aucune sous-catégorie</p>'; return; }
+    subData.forEach(sub => {
+      const imgUrl = sub.image ? (sub.image.startsWith('http') ? sub.image : `https://api.icaralgerie.com${sub.image}`) : null;
+      const item = document.createElement('div');
+      item.className = 'subcat-item';
+      item.innerHTML = `<div class="sub-img">${imgUrl ? `<img src="${imgUrl}" alt="${sub.name}">` : '<span style="font-size:28px;">🚗</span>'}</div><div class="sub-name">${sub.name}</div>`;
+      item.addEventListener('click', () => selectSubcategory(sub.id, sub.name, item));
+      picker.appendChild(item);
+    });
+  } catch(e) { loading.innerHTML = 'Erreur chargement'; }
+}
+
+function selectSubcategory(subId, subName, itemEl) {
+  selectedSubcategoryId = subId;
+  selectedSubcategoryName = subName;
+  document.getElementById('subcategory').value = subId;
+  document.getElementById('err-subcategory').classList.remove('show');
+  document.querySelectorAll('.subcat-item').forEach(el => el.classList.remove('selected'));
+  itemEl.classList.add('selected');
+}
+
+// Guard
+(function guard() {
+  if(!getToken()) { window.location.href = 'login.html'; return; }
+  const user = getUser();
+  if(user?.number) document.getElementById('phone').value = user.number;
+  loadCategories();
+})();
+
+// Steps
+function goToStep1() { setStep(1); showStep(1); }
+function goToStep2() { if(!validateStep1()) return; setStep(2); showStep(2); document.getElementById('step1').classList.add('done'); }
+function goToStep3() { setStep(3); showStep(3); document.getElementById('step2').classList.add('done'); renderRecap(); }
+
+function setStep(n) {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('step'+i);
+    el.classList.remove('active');
+    if(i < n) el.classList.add('done');
+    if(i === n) { el.classList.add('active'); el.classList.remove('done'); }
+  });
+}
+
+function showStep(n) {
+  document.getElementById('formStep1').style.display = n===1 ? 'block' : 'none';
+  document.getElementById('formStep2').style.display = n===2 ? 'block' : 'none';
+  document.getElementById('formStep3').style.display = n===3 ? 'block' : 'none';
+}
+
+function validateStep1() {
+  let valid = true;
+  if(!selectedCategoryId) { document.getElementById('err-category').classList.add('show'); valid = false; }
+  else document.getElementById('err-category').classList.remove('show');
+  if(!selectedSubcategoryId) { document.getElementById('err-subcategory').classList.add('show'); valid = false; }
+  else document.getElementById('err-subcategory').classList.remove('show');
+  ['brand','vehicleName','year','fuel','transmission','milage','price','location','description'].forEach(f => {
+    const el = document.getElementById(f), err = document.getElementById('err-'+f);
+    if(!el?.value.trim()) { el?.classList.add('error'); err?.classList.add('show'); valid = false; }
+    else { el.classList.remove('error'); err?.classList.remove('show'); }
+  });
+  if(!valid) showToast('Veuillez remplir tous les champs obligatoires', 'error');
+  return valid;
+}
+
+function validateStep3() {
+  const phone = document.getElementById('phone');
+  if(!phone.value.trim()) { phone.classList.add('error'); document.getElementById('err-phone').classList.add('show'); showToast('Téléphone requis', 'error'); return false; }
+  phone.classList.remove('error'); document.getElementById('err-phone').classList.remove('show');
+  return true;
+}
+
+function renderRecap() {
+  const fields = ['brand','vehicleName','year','fuel','transmission','milage','price','location','description'];
+  const values = {};
+  fields.forEach(f => values[f] = document.getElementById(f).value);
+  document.getElementById('recapContent').innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;">
+    <div><strong>Catégorie :</strong> ${selectedCategoryName}</div><div><strong>Sous-catégorie :</strong> ${selectedSubcategoryName}</div>
+    <div><strong>Marque :</strong> ${values.brand}</div><div><strong>Modèle :</strong> ${values.vehicleName}</div>
+    <div><strong>Année :</strong> ${values.year}</div><div><strong>Carburant :</strong> ${values.fuel}</div>
+    <div><strong>Transmission :</strong> ${values.transmission==='AUTOMATIC'?'Auto':'Manuelle'}</div>
+    <div><strong>Km :</strong> ${Number(values.milage).toLocaleString('fr-DZ')} km</div>
+    <div><strong>Prix :</strong> ${Number(values.price).toLocaleString('fr-DZ')} DA</div>
+    <div><strong>Localisation :</strong> ${values.location}</div>
+    <div><strong>Photos :</strong> ${uploadedImages.length}</div>
+  </div><div style="margin-top:12px;"><strong>Description :</strong><br>${values.description.substring(0,200)}${values.description.length>200?'…':''}</div>`;
+}
+
+// Images
+function handleFiles(files) {
+  Array.from(files).slice(0, 8 - uploadedImages.length).forEach(file => {
+    if(file.size > 5*1024*1024) { showToast(`${file.name} > 5 Mo`, 'error'); return; }
+    const reader = new FileReader();
+    reader.onload = e => { uploadedImages.push({file, dataUrl: e.target.result}); renderPreviews(); };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderPreviews() {
+  document.getElementById('imagesPreview').innerHTML = uploadedImages.map((img, i) => `
+    <div class="img-thumb ${i===primaryIndex?'primary-thumb':''}">
+      <img src="${img.dataUrl}">
+      <button class="img-remove" onclick="removeImage(${i})">✕</button>
+      ${i===primaryIndex ? '<div class="primary-badge">Principale</div>' : `<button class="img-set-primary" onclick="setPrimary(${i})">★</button>`}
+    </div>`).join('');
+}
+
+function removeImage(i) { uploadedImages.splice(i, 1); if(primaryIndex >= uploadedImages.length) primaryIndex = 0; renderPreviews(); }
+function setPrimary(i) { primaryIndex = i; renderPreviews(); }
+
+// Drag & Drop
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+uploadArea.addEventListener('drop', e => { e.preventDefault(); uploadArea.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+
+// Publish
+async function publishAd() {
+  if(!validateStep3()) return;
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Publication…';
+  try {
+    const formData = new FormData();
+    formData.append('brand', document.getElementById('brand').value.trim());
+    formData.append('name', document.getElementById('vehicleName').value.trim());
+    formData.append('year', document.getElementById('year').value);
+    formData.append('fuel', document.getElementById('fuel').value);
+    formData.append('transmissionType', document.getElementById('transmission').value);
+    formData.append('milage', document.getElementById('milage').value);
+    formData.append('price', document.getElementById('price').value);
+    formData.append('location', document.getElementById('location').value);
+    formData.append('description', document.getElementById('description').value.trim());
+    formData.append('phone', document.getElementById('phone').value.trim());
+    formData.append('coleur', document.getElementById('color').value.trim() || 'Non précisé');
+    formData.append('subcategory', selectedSubcategoryId);
+    if(!uploadedImages.length) { showToast('Ajoutez au moins une photo', 'error'); btn.disabled = false; btn.innerHTML = 'Publier l\'annonce'; return; }
+    uploadedImages.forEach(img => formData.append('images', img.file));
+    const res = await fetch(`${API_BASE}/vehicules/`, { method:'POST', headers:{'Authorization':getToken()}, body:formData });
+    if(!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(Object.values(e).flat().join(' · ')); }
+    showAlert('mainAlert', '✅ Annonce publiée avec succès !', 'success');
+    showToast('Annonce publiée !', 'success');
+    setTimeout(() => { window.location.href = 'profile.html'; }, 2000);
+  } catch(e) {
+    showAlert('mainAlert', '❌ '+e.message, 'error');
+    showToast('Erreur : '+e.message, 'error');
+    btn.disabled = false; btn.innerHTML = 'Publier l\'annonce';
+  }
+}
+
+function showAlert(id, msg, type) {
+  const el = document.getElementById(id);
+  el.className = `alert ${type} show`;
+  el.innerHTML = msg;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+</script>
+</body>
+</html>

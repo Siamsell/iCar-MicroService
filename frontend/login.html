@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>iCar — Connexion</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-elevated: #f1f5f9;
+    --border: #e2e8f0;
+    --text-primary: #002d8f;
+    --text-secondary: #0e2546;
+    --text-muted: #081e3d;
+    --accent: #07153a;
+    --accent-dark: #20283e;
+    --accent-soft: #dbeafe;
+    --accent-glow: rgba(54, 78, 129, 0.08);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.03);
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.08);
+    --radius-card: 24px;
+    --radius-sm: 14px;
+    --transition: all 0.2s ease;
+    --error: #dc2626;
+    --success: #10b981;
+  }
+
+  body.dark {
+    --bg: #0b1120;
+    --surface: #111827;
+    --surface-elevated: #1e293b;
+    --border: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-dark: #2563eb;
+    --accent-soft: #1e2a3e;
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.5);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.2s;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .login-container {
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface);
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+  }
+
+  .left-panel {
+     background:  linear-gradient(160deg,  #624f02ad 0%, var(--accent-dark) 60%);
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .car-image-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .car-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .car-slide.active {
+    opacity: 0.15;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .panel-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 22px;
+    color: white;
+  }
+
+  .logo-text {
+    font-weight: 800;
+    font-size: 24px;
+    color: white;
+  }
+
+  .logo-text span { color: #ffd700; }
+
+  .panel-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .panel-visual {
+    margin-bottom: 24px;
+  }
+
+  .panel-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .panel-title span { color: #ffd700; }
+
+  .panel-desc {
+    color: rgba(255,255,255,0.7);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .testimonial {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .testimonial p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+
+  .test-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .test-avatar {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .test-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .test-role {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .right-panel {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-header {
+    margin-bottom: 32px;
+  }
+
+  .form-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .form-header p {
+    color: var(--text-secondary);
+    font-size: 15px;
+  }
+
+  .form-header p a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .form-header p a:hover { text-decoration: underline; }
+
+  .alert {
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 24px;
+    display: none;
+  }
+
+  .alert.show { display: block; }
+
+  .alert.error {
+    background: rgba(220,38,38,0.1);
+    border: 1px solid rgba(220,38,38,0.3);
+    color: var(--error);
+  }
+
+  .alert.success {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: var(--success);
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 14px 14px 44px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: var(--transition);
+  }
+
+  .form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .form-input.error {
+    border-color: var(--error);
+  }
+
+  .form-input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .toggle-pw {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .toggle-pw:hover { color: var(--accent); }
+
+  .error-msg {
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 6px;
+    display: none;
+  }
+
+  .error-msg.show { display: block; }
+
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .checkbox-label input {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  .forgot-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .forgot-link:hover { text-decoration: underline; }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: var(--transition);
+    position: relative;
+  }
+
+  .btn-submit:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-submit .loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @keyframes spin {
+    to { transform: translateY(-50%) rotate(360deg); }
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .divider span {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .social-btn {
+    width: 100%;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .social-btn:hover {
+    border-color: var(--accent);
+    background: var(--surface);
+    transform: translateY(-1px);
+  }
+
+  .footer-text {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 24px;
+  }
+
+  .footer-text a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .footer-text a:hover { text-decoration: underline; }
+
+  .theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: var(--transition);
+    z-index: 100;
+  }
+
+  .theme-toggle-btn:hover { background: var(--accent-soft); }
+
+  @media (max-width: 900px) {
+    .login-container {
+      grid-template-columns: 1fr;
+      max-width: 500px;
+    }
+    .left-panel { display: none; }
+    .right-panel { padding: 32px 24px; }
+    .theme-toggle-btn { top: 10px; right: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle-btn" id="themeToggle">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+    <circle cx="12" cy="12" r="4"/>
+  </svg>
+  <span>Thème</span>
+</button>
+
+<div class="login-container">
+  <div class="left-panel">
+    <div class="car-image-slider" id="carSlider"></div>
+    <div class="panel-logo">
+      <div class="logo-icon">I</div>
+      <div class="logo-text">i<span>Car</span></div>
+    </div>
+    <div class="panel-content">
+      <div class="panel-title">Bon retour sur <span>iCar</span></div>
+      <p class="panel-desc">Accédez à des milliers d'annonces de voitures et gérez vos favoris en Algérie.</p>
+      <div class="testimonial">
+        <p>J'ai vendu ma Clio en moins de 48h grâce à iCar. La plateforme est incroyable !</p>
+        <div class="test-author">
+          <div class="test-avatar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div>
+            <div class="test-name">Karim B.</div>
+            <div class="test-role">Vendeur · Alger</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="form-header">
+      <h1>Connexion</h1>
+      <p>Pas encore de compte ? <a href="signup.html">Créer un compte →</a></p>
+    </div>
+
+    <div class="alert" id="alert"></div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label>Adresse email</label>
+        <div class="input-wrapper">
+          <span class="input-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-10 7L2 7"/>
+            </svg>
+          </span>
+          <input type="email" class="form-input" id="email" placeholder="votre@email.com" autocomplete="email">
+        </div>
+        <div class="error-msg" id="emailError">Email invalide</div>
+      </div>
+
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <div class="input-wrapper">
+          <span class="input-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </span>
+          <input type="password" class="form-input" id="password" placeholder="Votre mot de passe" autocomplete="current-password">
+          <button type="button" class="toggle-pw" id="togglePw">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="error-msg" id="passwordError">Mot de passe requis</div>
+      </div>
+
+      <div class="form-options">
+        <label class="checkbox-label">
+          <input type="checkbox" id="remember"> Se souvenir de moi
+        </label>
+        <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        Se connecter
+        <div class="loader" id="loader"></div>
+      </button>
+    </form>
+
+    <div class="divider"><span>ou</span></div>
+
+    
+
+    <div class="footer-text">
+      En vous connectant, vous acceptez nos <a href="#">CGU</a> et notre <a href="#">Politique de confidentialité</a>.
+    </div>
+  </div>
+</div>
+
+<script>
+  const carImages = [
+    'https://images.unsplash.com/photo-1588127333419-b9d7de223dcf?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1598377390308-e8898b5036a8?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1633885636677-04a3e3ccb958?q=80&w=736&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1621006378355-3dba49d3b2d5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+  ];
+
+  let currentCarSlide = 0;
+  let carSlideInterval;
+
+  function initCarSlider() {
+    const sliderContainer = document.getElementById('carSlider');
+    if (!sliderContainer) return;
+    
+    carImages.forEach((img, index) => {
+      const slide = document.createElement('div');
+      slide.className = `car-slide ${index === 0 ? 'active' : ''}`;
+      slide.style.backgroundImage = `url(${img})`;
+      sliderContainer.appendChild(slide);
+    });
+    
+    startCarAutoSlide();
+  }
+
+  function nextCarSlide() {
+    const slides = document.querySelectorAll('.car-slide');
+    if (!slides.length) return;
+    
+    slides[currentCarSlide].classList.remove('active');
+    currentCarSlide = (currentCarSlide + 1) % slides.length;
+    slides[currentCarSlide].classList.add('active');
+  }
+
+  function startCarAutoSlide() {
+    carSlideInterval = setInterval(() => nextCarSlide(), 4000);
+  }
+
+  function stopCarAutoSlide() {
+    if (carSlideInterval) clearInterval(carSlideInterval);
+  }
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+  });
+
+  const AUTH_URL = 'https://api.icaralgerie.com/auth';
+
+  const loginForm = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const submitBtn = document.getElementById('submitBtn');
+  const loader = document.getElementById('loader');
+  const alertBox = document.getElementById('alert');
+
+  let eyeOpen = true;
+
+  document.getElementById('togglePw').addEventListener('click', () => {
+    const type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type = type;
+    const svg = document.querySelector('#togglePw svg');
+    if (type === 'password') {
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    } else {
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/>';
+    }
+  });
+
+  function showAlert(msg, type) {
+    alertBox.textContent = msg;
+    alertBox.className = `alert ${type} show`;
+    setTimeout(() => {
+      alertBox.classList.remove('show');
+    }, 5000);
+  }
+
+  function setLoading(state) {
+    submitBtn.disabled = state;
+    loader.style.display = state ? 'block' : 'none';
+    submitBtn.textContent = state ? 'Connexion en cours...' : 'Se connecter';
+  }
+
+  function validate() {
+    let valid = true;
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    emailError.classList.remove('show');
+    passwordError.classList.remove('show');
+    emailInput.classList.remove('error');
+    passwordInput.classList.remove('error');
+
+    if (!emailInput.value || !/\S+@\S+\.\S+/.test(emailInput.value)) {
+      emailInput.classList.add('error');
+      emailError.classList.add('show');
+      valid = false;
+    }
+    if (!passwordInput.value) {
+      passwordInput.classList.add('error');
+      passwordError.classList.add('show');
+      valid = false;
+    }
+    return valid;
+  }
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${AUTH_URL}/api/login/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailInput.value, password: passwordInput.value })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('access_token', 'Bearer ' + data.access);
+        localStorage.setItem('refresh_token', data.refresh);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify({ name: data.user?.name || 'Utilisateur' }));
+        showAlert('Connexion réussie ! Redirection...', 'success');
+        setTimeout(() => window.location.href = 'index.html', 1200);
+      } else {
+        showAlert('' + (data.error || data.detail || 'Identifiants incorrects. Veuillez réessayer.'), 'error');
+      }
+    } catch (err) {
+      showAlert('Erreur de connexion. Vérifiez votre réseau.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  });
+
+
+
+  initCarSlider();
+</script>
+</body>
+</html>

@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Icar | Détails de l'annonce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-elevated: #f1f5f9;
+      --border: #e2e8f0;
+      --text-primary: #002d8f;
+      --text-secondary: #0e2546;
+      --text-muted: #081e3d;
+      --accent: #07153a;
+      --accent-dark: #20283e;
+      --accent-soft: #dbeafe;
+      --accent-glow: rgba(54, 78, 129, 0.08);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.03);
+      --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.08);
+      --radius-card: 24px;
+      --radius-sm: 14px;
+      --transition: all 0.2s ease;
+      --success: #10b981;
+      --error: #dc2626;
+      --whatsapp: #25D366;
+      --telegram: #0088cc;
+    }
+
+    body.dark {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-elevated: #1e293b;
+      --border: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-dark: #2563eb;
+      --accent-soft: #1e2a3e;
+      --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.5);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      transition: background 0.3s, color 0.2s;
+      scroll-behavior: smooth;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 57px;
+      backdrop-filter: blur(20px);
+      background: color-mix(in srgb, var(--bg) 75%, transparent);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+    }
+    body.dark .navbar { background: color-mix(in srgb, #0b1120 85%, transparent); }
+
+    .nav-container {
+      max-width: 1800px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .logo-symbol {
+      width: 29px;
+      height: 29px;
+      background: var(--accent);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 20px;
+      color: white;
+    }
+    .logo-text {
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+    }
+    .logo-text span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    .theme-toggle {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 8px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: var(--transition);
+    }
+    .theme-toggle:hover { background: var(--accent-soft); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+    }
+    .btn-primary {
+      background: var(--accent);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+    }
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+    .auth-buttons { display: flex; gap: 12px; align-items: center; }
+
+    .user-menu { position: relative; cursor: pointer; display: none; }
+    .user-avatar-nav {
+      display: flex; align-items: center; gap: 8px; padding: 6px 12px;
+      background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 40px; transition: all 0.2s;
+    }
+    .user-avatar-nav:hover { background: var(--accent-soft); border-color: var(--accent); }
+    .user-avatar-nav svg { stroke: var(--text-primary); }
+    .user-avatar-nav span { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .dropdown-menu {
+      position: absolute; top: 100%; right: 0; margin-top: 8px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 16px; min-width: 180px;
+      box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transform: translateY(-10px);
+      transition: all 0.2s; z-index: 100;
+    }
+    .user-menu:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .dropdown-menu a { display: block; padding: 12px 16px; text-decoration: none; color: var(--text-secondary); font-size: 14px; transition: all 0.2s; }
+    .dropdown-menu a:hover { background: var(--accent-soft); color: var(--accent); }
+    .dropdown-menu hr { margin: 4px 0; border-color: var(--border); }
+
+    /* Main Content */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 40px 40px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 24px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .ad-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+    }
+
+    @media (max-width: 900px) {
+      .ad-details-grid { grid-template-columns: 1fr; }
+      .container { padding: 20px; }
+      .navbar { padding: 0 20px; }
+    }
+
+    /* Gallery */
+    .gallery-section {
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .main-image-container {
+      position: relative;
+      width: 100%;
+      height: 450px;
+      background: var(--surface-elevated);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .main-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .gallery-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      color: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    .gallery-nav:hover { background: rgba(0,0,0,0.8); }
+    .gallery-nav.prev { left: 16px; }
+    .gallery-nav.next { right: 16px; }
+
+    .thumbnails {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .thumbnail {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .thumbnail:hover { transform: translateY(-2px); }
+    .thumbnail.active { border-color: var(--accent); transform: scale(1.02); }
+    .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Ad Info */
+    .ad-info {
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .ad-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .ad-price { font-size: 32px; font-weight: 800; color: var(--accent); }
+    .ad-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 16px 0;
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .meta-item svg { width: 16px; height: 16px; stroke: currentColor; }
+    .ad-description { line-height: 1.7; color: var(--text-secondary); margin: 20px 0; white-space: pre-line; }
+    .ad-description h3 { font-size: 18px; margin-bottom: 12px; color: var(--text-primary); }
+
+    /* Status Row */
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* Specs Grid */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .spec-item {
+      background: var(--surface-elevated);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .spec-label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+    .spec-value { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .status-badge.active { background: rgba(16,185,129,0.1); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+    .status-badge.sold { background: rgba(220,38,38,0.1); color: var(--error); border: 1px solid rgba(220,38,38,0.3); }
+
+    /* Sidebar */
+    .sidebar-card {
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .seller-info { text-align: center; }
+    .seller-avatar {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .seller-avatar:hover { transform: scale(1.05); }
+    .seller-avatar svg { width: 40px; height: 40px; stroke: white; }
+    .seller-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; cursor: pointer; transition: color 0.2s; }
+    .seller-name:hover { color: var(--accent); }
+    .seller-since { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+
+    /* Follow Buttons */
+    .btn-follow-user {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .btn-follow-user.follow {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+    .btn-follow-user.follow:hover { background: var(--accent-dark); }
+    .btn-follow-user.unfollow {
+      background: rgba(220,38,38,0.08);
+      color: var(--error);
+      border: 1px solid rgba(220,38,38,0.3);
+    }
+    .btn-follow-user.unfollow:hover {
+      background: var(--error);
+      color: white;
+    }
+
+    /* Follow Post Button (inline next to status) */
+    .btn-follow-post {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+    }
+    .btn-follow-post.follow {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .btn-follow-post.follow:hover { background: var(--accent); color: white; }
+    .btn-follow-post.unfollow {
+      background: rgba(220,38,38,0.08);
+      color: var(--error);
+      border: 1px solid rgba(220,38,38,0.3);
+    }
+    .btn-follow-post.unfollow:hover {
+      background: var(--error);
+      color: white;
+    }
+
+    .contact-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .contact-btn.call { background: #1b8a4a; color: white; }
+    .contact-btn.whatsapp { background: var(--whatsapp); color: white; }
+    .contact-btn.telegram { background: var(--telegram); color: white; }
+    .contact-btn.copy { background: var(--surface-elevated); color: var(--text-primary); border: 1px solid var(--border); }
+    .contact-btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .contact-btn svg { stroke: white; }
+    .contact-btn.copy svg { stroke: currentColor; }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    .action-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 40px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+    .action-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Login Dialog */
+    .dialog-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 1000;
+    }
+    .dialog-overlay.show { display: flex; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .dialog-card {
+      background: var(--surface); border-radius: var(--radius-card); padding: 32px;
+      max-width: 420px; width: 90%; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .dialog-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .dialog-card p { color: var(--text-muted); margin-bottom: 24px; font-size: 14px; }
+    .dialog-actions { display: flex; gap: 12px; justify-content: center; }
+
+    /* Loading & Toast */
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: var(--text-muted);
+    }
+    .spin {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      padding: 12px 20px;
+      border-radius: 60px;
+      box-shadow: var(--shadow-md);
+      z-index: 1100;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: 0.25s;
+      pointer-events: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    footer {
+      background: linear-gradient(135deg, #07153af7 0%, #0a1a4aef 100%);
+      color: white;
+      padding: 60px 40px 40px;
+      margin-top: 60px;
+    }
+    .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
+    .footer-col h4 { font-size: 18px; margin-bottom: 20px; color: #ffd700; }
+    .footer-col p { color: rgba(255,255,255,0.7); margin-bottom: 12px; }
+    .footer-bottom { text-align: center; padding-top: 40px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); font-size: 14px; }
+    
+    .back-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    flex-shrink: 0;
+    margin-right:5px;
+  }
+  .back-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .back-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-container">
+      <div style="display:flex;">
+          <button class="back-btn" onclick="history.back()" title="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+    <a href="index.html" class="logo">
+      <div class="logo-symbol">I</div>
+      <div class="logo-text">I<span>car</span></div>
+    </a>
+      </div>
+      
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="index.html#categories">Annonces</a>
+      <button class="theme-toggle" id="themeToggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>
+        <span>Thème</span>
+      </button>
+      <div class="auth-buttons" id="authButtons">
+        <button class="btn-outline" onclick="window.location.href='login.html'">Se connecter</button>
+        <button class="btn-primary" onclick="window.location.href='signup.html'">S'inscrire</button>
+      </div>
+      <div class="user-menu" id="userMenu">
+        <div class="user-avatar-nav">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="navUserName">Compte</span>
+        </div>
+        <div class="dropdown-menu">
+          <a href="profile.html">Mon profil</a>
+          <hr>
+          <a href="#" id="logoutBtn">Déconnexion</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container" id="adContainer">
+    <a class="back-link" onclick="history.back()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Retour
+    </a>
+    <div id="loadingIndicator" class="loading"><div class="spin"></div> Chargement...</div>
+    <div id="adContent" style="display: none;"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="logo-text" style="font-size:24px; color:white;">I<span style="color:#ffd700">car</span></div>
+      <p style="margin-top:16px;">Leader de la confiance automobile en Algérie.</p>
+    </div>
+    <div class="footer-col"><h4>Explorer</h4><p>Annonces</p><p>Location</p><p>Vendre ma voiture</p></div>
+    <div class="footer-col"><h4>Support</h4><p>FAQ</p><p>Contactez-nous</p></div>
+    <div class="footer-col"><h4>Légal</h4><p>CGU</p><p>Confidentialité</p></div>
+  </div>
+  <div class="footer-bottom">© 2026 Icar Tous droits réservés | Marketplace automobile Algérie</div>
+</footer>
+
+<div id="toastMessage" class="toast"></div>
+
+<div class="dialog-overlay" id="loginDialog">
+  <div class="dialog-card">
+    <h3>Connexion requise</h3>
+    <p>Connectez-vous pour suivre cette annonce ou cet utilisateur.</p>
+    <div class="dialog-actions">
+      <button class="btn-outline" onclick="closeLoginDialog()">Annuler</button>
+      <button class="btn-primary" onclick="goToLogin()">Se connecter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const NOTIF_URL = 'https://api.icaralgerie.com/notifications';
+  const CATALOG_URL = 'https://api.icaralgerie.com/catalog/api';
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const adId = urlParams.get('id');
+
+  const loadingEl = document.getElementById('loadingIndicator');
+  const adContentEl = document.getElementById('adContent');
+
+  let currentImageIndex = 0;
+  let currentImages = [];
+  let currentCar = null;
+  let isFollowingUser = false;
+  let isFollowingPost = false;
+
+  function getToken() { return localStorage.getItem('access_token'); }
+  function isLoggedIn() { return !!getToken(); }
+  function getCurrentUser() { return JSON.parse(localStorage.getItem('user') || 'null'); }
+
+  function showToast(message) {
+    const toast = document.getElementById('toastMessage');
+    toast.innerText = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  function formatPrice(price) {
+    if (!price) return 'Prix non spécifié';
+    return Number(price).toLocaleString('fr-DZ') + ' DA';
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) return '—';
+    return new Date(dateString).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function formatMilage(milage) {
+    if (!milage) return '—';
+    return Number(milage).toLocaleString() + ' km';
+  }
+
+  function showLoginDialog() { document.getElementById('loginDialog').classList.add('show'); }
+  function closeLoginDialog() { document.getElementById('loginDialog').classList.remove('show'); }
+  function goToLogin() { window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`; }
+  document.getElementById('loginDialog').addEventListener('click', (e) => { if(e.target === document.getElementById('loginDialog')) closeLoginDialog(); });
+
+  // Update auth UI
+  function updateAuthUI() {
+    const authButtons = document.getElementById('authButtons');
+    const userMenu = document.getElementById('userMenu');
+    const user = getCurrentUser();
+    if(isLoggedIn() && user?.name) {
+      authButtons.style.display = 'none';
+      userMenu.style.display = 'block';
+      document.getElementById('navUserName').textContent = user.name;
+    } else {
+      authButtons.style.display = 'flex';
+      userMenu.style.display = 'none';
+    }
+  }
+
+  // Fetch ad details
+  async function fetchAdDetails() {
+    if (!adId) {
+      loadingEl.innerHTML = '<div class="loading">❌ Aucun ID d\'annonce spécifié</div>';
+      return;
+    }
+
+    try {
+      const response = await fetch(`${CATALOG_URL}/vehicules/${adId}/`);
+      if (!response.ok) throw new Error('Annonce non trouvée');
+      currentCar = await response.json();
+      
+      await checkFollowPostStatus();
+      await checkFollowUserStatus();
+      
+      renderAdDetails(currentCar);
+    } catch (error) {
+      console.error('Erreur:', error);
+      loadingEl.innerHTML = '<div class="loading">❌ Impossible de charger les détails de l\'annonce</div>';
+    }
+  }
+
+  // Check if user follows this post (same as user page)
+  async function checkFollowPostStatus() {
+    if (!isLoggedIn() || !adId) return;
+    try {
+      const res = await fetch(`${NOTIF_URL}/api/follow/post/check/?post=${adId}`, {
+        headers: { Authorization: getToken() }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        isFollowingPost = data.is_following;
+      }
+    } catch(e) {}
+  }
+
+  // Check if user follows the seller (extracted from user page logic)
+  async function checkFollowUserStatus() {
+    if (!isLoggedIn() || !currentCar?.user?.id) return;
+    const userId = currentCar.user.id;
+    try {
+      const res = await fetch(`${NOTIF_URL}/api/follow/check/?user=${userId}`, {
+        headers: { Authorization: getToken() }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        isFollowingUser = data.is_following;
+      }
+    } catch(e) {}
+  }
+
+  // Follow/Unfollow Post
+  async function handleFollowPost() {
+    if (!isLoggedIn()) { showLoginDialog(); return; }
+    if (isFollowingPost) await unfollowPost();
+    else await followPost();
+  }
+
+  async function followPost() {
+    try {
+      const res = await fetch(`${NOTIF_URL}/api/follow/post/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: getToken() },
+        body: JSON.stringify({ id: parseInt(adId) })
+      });
+      if (res.ok) {
+        isFollowingPost = true;
+        updatePostFollowButton();
+        showToast('Notifications activées pour cette annonce');
+      }
+    } catch(e) { showToast('Erreur réseau', 'error'); }
+  }
+
+  async function unfollowPost() {
+    const user = getCurrentUser();
+    try {
+      const res = await fetch(`${NOTIF_URL}/api/unfollow/post/`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', Authorization: getToken() },
+        body: JSON.stringify({post: parseInt(adId) })
+      });
+      if (res.ok || res.status === 204) {
+        isFollowingPost = false;
+        updatePostFollowButton();
+        showToast('Notifications désactivées pour cette annonce');
+      }
+    } catch(e) { showToast('Erreur réseau', 'error'); }
+  }
+
+  function updatePostFollowButton() {
+    const btn = document.getElementById('followPostBtn');
+    if (!btn) return;
+    if (isFollowingPost) {
+      btn.className = 'btn-follow-post unfollow';
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Désactiver les notifications`;
+    } else {
+      btn.className = 'btn-follow-post follow';
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Activer les notifications`;
+    }
+  }
+
+  // Follow/Unfollow User (extracted from user page)
+  async function handleFollowUser() {
+    if (!isLoggedIn()) { showLoginDialog(); return; }
+    if (isFollowingUser) await unfollowUser();
+    else await followUser();
+  }
+
+  async function followUser() {
+    const user = getCurrentUser();
+    try {
+      const res = await fetch(`${NOTIF_URL}/api/follow/user/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: getToken() },
+        body: JSON.stringify({ follower: user.id, following: currentCar.user.id })
+      });
+      if (res.ok) {
+        isFollowingUser = true;
+        updateUserFollowButton();
+        showToast('Vous suivez maintenant ce vendeur');
+      }
+    } catch(e) { showToast('Erreur réseau', 'error'); }
+  }
+
+  async function unfollowUser() {
+    const user = getCurrentUser();
+    try {
+      const res = await fetch(`${NOTIF_URL}/api/unfollow/user/`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', Authorization: getToken() },
+        body: JSON.stringify({ follower: user.id, following: currentCar.user.id })
+      });
+      if (res.ok || res.status === 204) {
+        isFollowingUser = false;
+        updateUserFollowButton();
+        showToast('Vous ne suivez plus ce vendeur');
+      }
+    } catch(e) { showToast('Erreur réseau', 'error'); }
+  }
+
+  function updateUserFollowButton() {
+    const btn = document.getElementById('followUserBtn');
+    if (!btn) return;
+    if (isFollowingUser) {
+      btn.className = 'btn-follow-user unfollow';
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Se désabonner`;
+    } else {
+      btn.className = 'btn-follow-user follow';
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg> Suivre le vendeur`;
+    }
+  }
+
+  function getAllImages(car) {
+    const images = [];
+    if (car.images && car.images.length > 0) {
+      car.images.forEach(img => {
+        const url = img.image_url || img.image;
+        if (url) images.push(url);
+      });
+    }
+    if (images.length === 0) {
+      images.push('https://placehold.co/800x500/e2e8f0/1e293b?text=Image+non+disponible');
+    }
+    return images;
+  }
+
+  function renderGallery() {
+    return `
+      <div class="gallery-section">
+        <div class="main-image-container" id="mainImageContainer">
+          <button class="gallery-nav prev" id="galleryPrev">‹</button>
+          <button class="gallery-nav next" id="galleryNext">›</button>
+          <img id="mainImage" src="${currentImages[currentImageIndex]}" alt="Image principale">
+        </div>
+        <div class="thumbnails" id="thumbnailsContainer">
+          ${currentImages.map((img, index) => `
+            <div class="thumbnail ${index === currentImageIndex ? 'active' : ''}" data-index="${index}">
+              <img src="${img}" alt="Miniature ${index + 1}" onerror="this.src='https://placehold.co/80x80/e2e8f0/1e293b?text=Error'">
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function initGallery() {
+    const mainImage = document.getElementById('mainImage');
+    const prevBtn = document.getElementById('galleryPrev');
+    const nextBtn = document.getElementById('galleryNext');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+        mainImage.src = currentImages[currentImageIndex];
+        updateThumbnails();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+        mainImage.src = currentImages[currentImageIndex];
+        updateThumbnails();
+      });
+    }
+
+    thumbnails.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        currentImageIndex = parseInt(thumb.dataset.index);
+        mainImage.src = currentImages[currentImageIndex];
+        updateThumbnails();
+      });
+    });
+  }
+
+  function updateThumbnails() {
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    thumbnails.forEach((thumb, idx) => {
+      thumb.classList.toggle('active', idx === currentImageIndex);
+    });
+  }
+
+  function renderAdDetails(car) {
+    currentImages = getAllImages(car);
+    currentImageIndex = 0;
+
+    const transmissionText = car.transmissionType === 'AUTOMATIC' ? 'Automatique' : 'Manuelle';
+    const statusClass = car.status === 'ACTIVE' ? 'active' : 'sold';
+    const statusText = car.status === 'ACTIVE' ? '✓ Disponible' : '✗ Vendu';
+
+    const html = `
+      <div class="ad-details-grid">
+        <div>
+          ${renderGallery()}
+          
+          <div class="ad-info">
+            <div class="status-row">
+              <span class="status-badge ${statusClass}">${statusText}</span>
+              <button class="btn-follow-post follow" id="followPostBtn" onclick="handleFollowPost()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Activer les notifications
+              </button>
+            </div>
+            <h1 class="ad-title">${car.brand || ''} ${car.name || ''} (${car.year || 'Année inconnue'})</h1>
+            <div class="ad-price">${formatPrice(car.price)}</div>
+            
+            <div class="ad-meta">
+              <span class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>${car.location || 'Localisation non spécifiée'}</span>
+              <span class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${formatMilage(car.milage)}</span>
+              <span class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>${car.fuel || 'Non spécifié'}</span>
+              <span class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>${transmissionText}</span>
+            </div>
+            
+            <div class="ad-description">
+              <h3>Description</h3>
+              <p>${car.description || 'Aucune description fournie pour cette annonce.'}</p>
+            </div>
+            
+            <div class="specs-grid">
+              <div class="spec-item"><div class="spec-label">Marque</div><div class="spec-value">${car.brand || '—'}</div></div>
+              <div class="spec-item"><div class="spec-label">Modèle</div><div class="spec-value">${car.name || '—'}</div></div>
+              <div class="spec-item"><div class="spec-label">Année</div><div class="spec-value">${car.year || '—'}</div></div>
+              <div class="spec-item"><div class="spec-label">Kilométrage</div><div class="spec-value">${formatMilage(car.milage)}</div></div>
+              <div class="spec-item"><div class="spec-label">Carburant</div><div class="spec-value">${car.fuel || '—'}</div></div>
+              <div class="spec-item"><div class="spec-label">Transmission</div><div class="spec-value">${transmissionText}</div></div>
+              <div class="spec-item"><div class="spec-label">Couleur</div><div class="spec-value">${car.coleur || car.color || '—'}</div></div>
+              <div class="spec-item"><div class="spec-label">Catégorie</div><div class="spec-value">${car.category?.name || car.subcategory?.name || '—'}</div></div>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="sidebar-card">
+            <div class="seller-info">
+              <div class="seller-avatar" onclick="navigateToProfile(${car.user?.id})">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="seller-name" onclick="navigateToProfile(${car.user?.id})">${car.user?.name || 'Vendeur'}</div>
+              <div class="seller-since">Membre depuis ${formatDate(car.created_at)}</div>
+            </div>
+            
+            <button class="btn-follow-user follow" id="followUserBtn" onclick="handleFollowUser()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Suivre le vendeur
+            </button>
+            
+            <div class="contact-buttons">
+              <button class="contact-btn call" onclick="window.location.href='tel:${car.phone}'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Appeler
+              </button>
+              <button class="contact-btn whatsapp" onclick="openWhatsApp('${car.phone}')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                WhatsApp
+              </button>
+              <button class="contact-btn telegram" onclick="openTelegram('${car.phone}')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                Telegram
+              </button>
+              <button class="contact-btn copy" id="copyPhoneBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copier le numéro
+              </button>
+            </div>
+          </div>
+          
+          <div class="sidebar-card">
+            <div class="action-buttons">
+              <button class="action-btn" id="shareBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                Partager
+              </button>
+              <button class="action-btn" id="reportBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="currentColor" stroke="none"/></svg>
+                Signaler
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    loadingEl.style.display = 'none';
+    adContentEl.style.display = 'block';
+    adContentEl.innerHTML = html;
+
+    initGallery();
+    updatePostFollowButton();
+    updateUserFollowButton();
+
+    document.getElementById('copyPhoneBtn')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(car.phone || '');
+      showToast('Numéro copié dans le presse-papier');
+    });
+
+    document.getElementById('shareBtn')?.addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share({
+          title: `${car.brand} ${car.name}`,
+          text: `Découvrez cette annonce sur Icar`,
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        showToast('Lien copié dans le presse-papier');
+      }
+    });
+
+    document.getElementById('reportBtn')?.addEventListener('click', () => {
+      showToast('Signalement envoyé. Nous traiterons votre demande rapidement.');
+    });
+  }
+
+  window.navigateToProfile = function(userId) {
+    if (userId) {
+      window.location.href = `https://app.icaralgerie.com/user?id=${userId}`;
+    }
+  };
+
+  window.openWhatsApp = function(phone) {
+    const formattedPhone = phone?.replace(/[^0-9]/g, '') || '';
+    const message = encodeURIComponent(`Bonjour, je suis intéressé par votre annonce sur Icar.`);
+    window.open(`https://wa.me/${formattedPhone}?text=${message}`);
+  };
+
+  window.openTelegram = function(phone) {
+    window.open(`https://t.me/${phone}`);
+  };
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    localStorage.clear(); 
+    window.location.reload(); 
+  });
+
+  (function init() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') document.body.classList.add('dark');
+    updateAuthUI();
+    fetchAdDetails();
+  })();
+</script>
+</body>
+</html>

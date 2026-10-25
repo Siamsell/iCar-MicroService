@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iCar — Modifier l'annonce</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-elevated: #f1f5f9;
+    --border: #e2e8f0;
+    --text-primary: #002d8f;
+    --text-secondary: #0e2546;
+    --text-muted: #081e3d;
+    --accent: #07153a;
+    --accent-dark: #20283e;
+    --accent-soft: #dbeafe;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.03);
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.08);
+    --radius-card: 24px;
+    --radius-sm: 14px;
+    --transition: all 0.2s ease;
+    --error: #dc2626;
+    --success: #10b981;
+  }
+
+  body.dark {
+    --bg: #0b1120;
+    --surface: #111827;
+    --surface-elevated: #1e293b;
+    --border: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-dark: #2563eb;
+    --accent-soft: #1e2a3e;
+    --shadow-md: 0 8px 20px -4px rgba(0,0,0,0.5);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.2s;
+    min-height: 100vh;
+  }
+
+  /* Navbar - Matching user page style */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 57px;
+    backdrop-filter: blur(20px);
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+  }
+  body.dark .navbar { background: color-mix(in srgb, #0b1120 85%, transparent); }
+
+  .nav-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .logo-symbol {
+    width: 29px;
+    height: 29px;
+    background: var(--accent);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 20px;
+    color: white;
+  }
+  .logo-text {
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+  }
+  .logo-text span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  .theme-toggle {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 8px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: var(--transition);
+  }
+  .theme-toggle:hover { background: var(--accent-soft); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+  .btn-outline:hover { background: var(--accent-soft); }
+
+  .btn-primary {
+    background: var(--accent);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+  .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-danger {
+    background: rgba(220,38,38,0.1);
+    color: var(--error);
+    border: 1px solid rgba(220,38,38,0.3);
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+  .btn-danger:hover { background: var(--error); color: white; }
+
+  /* Page */
+  .page-wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+  .page-header { margin-bottom: 32px; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .page-title { font-size: 28px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.5px; }
+  .page-sub { color: var(--text-muted); font-size: 14px; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+  }
+  .card-title svg { width: 20px; height: 20px; stroke: var(--accent); stroke-width: 1.5; }
+  .card-sub { color: var(--text-muted); font-size: 13px; margin-bottom: 24px; }
+
+  /* Form */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-group { margin-bottom: 0; }
+  .form-group.full { grid-column: 1/-1; }
+  label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 7px; font-weight: 500; }
+  label .req { color: var(--accent); }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: var(--transition);
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(54, 78, 129, 0.1);
+  }
+  .form-input.error, .form-select.error { border-color: var(--error); }
+  .form-textarea { resize: vertical; min-height: 110px; }
+  .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
+  .form-select option { background: var(--surface); color: var(--text-primary); }
+  .field-error { font-size: 11px; color: var(--error); margin-top: 5px; display: none; }
+  .field-error.show { display: block; }
+
+  .price-input-wrap { position: relative; }
+  .price-input-wrap .form-input { padding-right: 50px; }
+  .price-suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text-muted); font-weight: 600; pointer-events: none; }
+
+  /* Images */
+  .images-current { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .img-thumb {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+    background: var(--surface-elevated);
+  }
+  .img-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .img-thumb .img-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+  }
+  .img-thumb .img-remove:hover { background: var(--error); }
+  .img-thumb.primary-thumb { border-color: var(--accent); }
+  .img-thumb .primary-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    background: var(--surface-elevated);
+    margin-bottom: 12px;
+  }
+  .upload-area:hover, .upload-area.drag-over { border-color: var(--accent); background: var(--accent-soft); }
+  .upload-area svg { width: 32px; height: 32px; stroke: var(--text-muted); margin-bottom: 8px; }
+  .upload-area p { color: var(--text-muted); font-size: 13px; }
+  .upload-area strong { color: var(--accent); }
+  .upload-area input[type=file] { display: none; }
+  .new-images-preview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  /* Lists */
+  .image-lists { margin-top: 16px; }
+  .image-list-title { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+  .image-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .image-list-tag {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .image-list-tag.new { border-color: var(--success); color: var(--success); }
+  .image-list-tag.deleted { border-color: var(--error); color: var(--error); text-decoration: line-through; }
+
+  /* Section Divider */
+  .section-divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* Form Actions */
+  .form-actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  /* Alert */
+  .alert {
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: none;
+    margin-bottom: 20px;
+    align-items: center;
+    gap: 10px;
+  }
+  .alert.show { display: flex; }
+  .alert.success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--success); }
+  .alert.error { background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3); color: var(--error); }
+
+  /* Loading */
+  .loading { text-align: center; padding: 60px; color: var(--text-muted); }
+  .spin {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .spin-lg {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideUp .3s ease;
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.success { border-left-color: var(--success); }
+  .toast.error { border-left-color: var(--error); }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Delete Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    z-index: 500; display: none; align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+    padding: 36px; max-width: 420px; width: 90%; text-align: center; box-shadow: var(--shadow-md);
+  }
+  .modal-box h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .modal-box p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+  .modal-actions { display: flex; gap: 12px; justify-content: center; }
+
+  @media(max-width:768px) {
+    .navbar { padding: 0 20px; }
+    .page-wrap { padding: 24px 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .images-current, .new-images-preview { grid-template-columns: repeat(2, 1fr); }
+  }
+  
+  .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .back-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+        .back-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-container">
+      
+      <div class="nav-left">
+           <button class="back-btn" onclick="history.back()" title="Retour">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+           <a href="index.html" class="logo">
+      <div class="logo-symbol">I</div>
+      <div class="logo-text">I<span>car</span></div>
+    </a>
+      </div>
+   
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="recherche.html">Recherche</a>
+      <button class="theme-toggle" id="themeToggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>
+        <span>Thème</span>
+      </button>
+      <button class="btn-outline" onclick="window.location.href='profile.html'">Mes annonces</button>
+    </div>
+  </div>
+</header>
+
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <h3>🗑️ Supprimer l'annonce ?</h3>
+    <p>Cette action est irréversible. Votre annonce sera définitivement supprimée de la plateforme.</p>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="document.getElementById('deleteModal').classList.remove('active')">Annuler</button>
+      <button class="btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Accueil</a>
+      <span>›</span>
+      <a href="profile.html">Mon profil</a>
+      <span>›</span>
+      <span id="breadcrumbTitle">Modifier l'annonce</span>
+    </div>
+    <div class="page-title">Modifier l'annonce</div>
+    <div class="page-sub" id="pageSubtitle">Chargement…</div>
+  </div>
+
+  <div class="alert" id="mainAlert"></div>
+
+  <div id="loadingState" class="loading"><div class="spin-lg"></div><br><br>Chargement de l'annonce…</div>
+
+  <div id="formContainer" style="display:none;">
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 16H9m10 0h3v-3.5L19 9h-3M5 16H3v-3.5L7 9h3M10 9h4"/><rect x="3" y="13" width="18" height="3" rx="1"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
+        Informations du véhicule
+      </div>
+      <div class="card-sub">Modifiez les caractéristiques de votre véhicule</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Marque <span class="req">*</span></label><input type="text" class="form-input" id="brand" placeholder="Ex: Toyota, BMW…"><div class="field-error" id="err-brand">Requis</div></div>
+        <div class="form-group"><label>Modèle <span class="req">*</span></label><input type="text" class="form-input" id="vehicleName" placeholder="Ex: Camry, X5…"><div class="field-error" id="err-vehicleName">Requis</div></div>
+        <div class="form-group"><label>Année <span class="req">*</span></label><input type="number" class="form-input" id="year" min="1970" max="2026"><div class="field-error" id="err-year">Requis</div></div>
+        <div class="form-group" style="display:none;"><label>Catégorie</label><select class="form-select" id="category"><option value="">Sélectionner…</option><option value="Berline">Berline</option><option value="SUV">SUV / 4×4</option><option value="Citadine">Citadine</option><option value="Coupé">Coupé</option><option value="Break">Break</option><option value="Cabriolet">Cabriolet</option>
+        </select></div>
+        <div class="form-group"><label>Carburant <span class="req">*</span></label><select class="form-select" id="fuel"><option value="">Sélectionner…</option><option value="essence">Essence</option><option value="diesel">Diesel</option><option value="hybrid">Hybride</option><option value="electric">Électrique</option></select><div class="field-error" id="err-fuel">Requis</div></div>
+        <div class="form-group"><label>Transmission <span class="req">*</span></label><select class="form-select" id="transmission"><option value="">Sélectionner…</option><option value="MANUAL">Manuelle</option><option value="AUTOMATIC">Automatique</option></select><div class="field-error" id="err-transmission">Requis</div></div>
+        <div class="form-group"><label>Kilométrage <span class="req">*</span></label><div class="price-input-wrap"><input type="number" class="form-input" id="milage" min="0"><span class="price-suffix">km</span></div><div class="field-error" id="err-milage">Requis</div></div>
+        <div class="form-group"><label>Prix <span class="req">*</span></label><div class="price-input-wrap"><input type="number" class="form-input" id="price" min="0"><span class="price-suffix">DA</span></div><div class="field-error" id="err-price">Requis</div></div>
+        <div class="form-group">
+            <label>Wilaya <span class="req">*</span></label>
+            
+            <select class="form-select" id="location">
+  <option value="">Sélectionner…</option>
+  <option>Adrar</option>
+  <option>Chlef</option>
+  <option>Laghouat</option>
+  <option>Oum El Bouaghi</option>
+  <option>Batna</option>
+  <option>Béjaïa</option>
+  <option>Biskra</option>
+  <option>Béchar</option>
+  <option>Blida</option>
+  <option>Bouira</option>
+  <option>Tamanrasset</option>
+  <option>Tébessa</option>
+  <option>Tlemcen</option>
+  <option>Tiaret</option>
+  <option>Tizi Ouzou</option>
+  <option>Alger</option>
+  <option>Djelfa</option>
+  <option>Jijel</option>
+  <option>Sétif</option>
+  <option>Saïda</option>
+  <option>Skikda</option>
+  <option>Sidi Bel Abbès</option>
+  <option>Annaba</option>
+  <option>Guelma</option>
+  <option>Constantine</option>
+  <option>Médéa</option>
+  <option>Mostaganem</option>
+  <option>M'Sila</option>
+  <option>Mascara</option>
+  <option>Ouargla</option>
+  <option>Oran</option>
+  <option>El Bayadh</option>
+  <option>Illizi</option>
+  <option>Bordj Bou Arréridj</option>
+  <option>Boumerdès</option>
+  <option>El Tarf</option>
+  <option>Tindouf</option>
+  <option>Tissemsilt</option>
+  <option>El Oued</option>
+  <option>Khenchela</option>
+  <option>Souk Ahras</option>
+  <option>Tipaza</option>
+  <option>Mila</option>
+  <option>Aïn Defla</option>
+  <option>Naâma</option>
+  <option>Aïn Témouchent</option>
+  <option>Ghardaïa</option>
+  <option>Relizane</option>
+  <option>Timimoun</option>
+  <option>Bordj Badji Mokhtar</option>
+  <option>Ouled Djellal</option>
+  <option>Béni Abbès</option>
+  <option>In Salah</option>
+  <option>In Guezzam</option>
+  <option>Touggourt</option>
+  <option>Djanet</option>
+  <option>El Meghaier</option>
+  <option>El Meniaa</option>
+</select>
+        
+        <div class="field-error" id="err-location">Requis</div></div>
+        <div class="form-group"><label>Couleur</label><input type="text" class="form-input" id="color" placeholder="Ex: Blanc, Noir…"></div>
+        <div class="form-group"><label>Téléphone <span class="req">*</span></label><input type="tel" class="form-input" id="phone" placeholder="0551 23 45 67"><div class="field-error" id="err-phone">Requis</div></div>
+        <div class="form-group full"><label>Description <span class="req">*</span></label><textarea class="form-textarea" id="description" placeholder="Décrivez votre véhicule…"></textarea><div class="field-error" id="err-description">Requis</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Photos
+      </div>
+      <div class="card-sub">Photos actuelles — cliquez sur ✕ pour supprimer</div>
+      <div class="images-current" id="currentImages"></div>
+      <div class="image-lists" id="imageLists" style="display:none;"></div>
+
+      <div class="section-divider"></div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Ajouter de nouvelles photos</p>
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" multiple accept="image/*" onchange="handleNewFiles(this.files)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M12 22v-6M2 12h6M22 12h-6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/><circle cx="12" cy="12" r="3"/></svg>
+        <p><strong>Cliquez</strong> ou glissez vos photos ici</p>
+        <p style="font-size:12px;margin-top:4px;">PNG, JPG — max 5 Mo par image</p>
+      </div>
+      <div class="new-images-preview" id="newImagesPreview"></div>
+    </div>
+
+    <div class="card" style="border-color:rgba(220,38,38,0.2);">
+      <div class="card-title" style="color:var(--error);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="stroke:var(--error);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="currentColor" stroke="none"/></svg>
+        Zone dangereuse
+      </div>
+      <div class="card-sub">La suppression de l'annonce est irréversible</div>
+      <button class="btn-danger" onclick="document.getElementById('deleteModal').classList.add('active')">Supprimer cette annonce</button>
+    </div>
+
+    <div class="form-actions-bar">
+      <button class="btn-outline" onclick="window.location.href='profile.html'">Annuler</button>
+      <button class="btn-primary" id="saveBtn" onclick="saveChanges()">Enregistrer les modifications</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATALOG_URL = 'https://api.icaralgerie.com/catalog/api';
+let vehicleId = null;
+let existingImages = [];
+let newImageFiles = [];
+let deletedImageIds = [];
+
+function getToken() { return localStorage.getItem('access_token'); }
+
+// Theme
+(function initTheme() {
+  const saved = localStorage.getItem('theme');
+  if(saved === 'dark') document.body.classList.add('dark');
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  });
+})();
+
+// Init
+(async function init() {
+  if(!getToken()) { window.location.href = 'login.html'; return; }
+  const params = new URLSearchParams(window.location.search);
+  vehicleId = params.get('id');
+  if(!vehicleId) { window.location.href = 'profile.html'; return; }
+  await loadVehicle();
+})();
+
+async function loadVehicle() {
+  try {
+    const res = await fetch(`${CATALOG_URL}/vehicules/${vehicleId}/`, {
+      headers: { 'Authorization': getToken() }
+    });
+    if(!res.ok) throw new Error(res.status);
+    const car = await res.json();
+    
+    // Store existing images
+    existingImages = car.images || [];
+    
+    fillForm(car);
+    renderExistingImages();
+    updateImageLists();
+    
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('formContainer').style.display = 'block';
+    document.getElementById('pageSubtitle').textContent = `${car.brand || ''} ${car.name || ''} — ${car.year || ''}`;
+    document.getElementById('breadcrumbTitle').textContent = `${car.brand || ''} ${car.name || ''}`;
+    document.title = `Modifier — ${car.brand || ''} ${car.name || ''} | iCar`;
+  } catch(e) {
+    document.getElementById('loadingState').innerHTML = `<p style="color:var(--error);">Impossible de charger l'annonce.</p><br><button class="btn-outline" onclick="window.location.href='profile.html'">← Retour</button>`;
+  }
+}
+
+function fillForm(car) {
+  document.getElementById('brand').value = car.brand || '';
+  document.getElementById('vehicleName').value = car.name || '';
+  document.getElementById('year').value = car.year || '';
+  document.getElementById('milage').value = car.milage || '';
+  document.getElementById('price').value = car.price || '';
+  document.getElementById('description').value = car.description || '';
+  document.getElementById('phone').value = car.phone || '';
+  document.getElementById('color').value = car.coleur || '';
+  setSelect('fuel', car.fuel);
+  setSelect('transmission', car.transmissionType);
+  setSelect('location', car.location);
+  if(car.category?.name) setSelect('category', car.category.name);
+}
+
+function setSelect(id, value) {
+  const sel = document.getElementById(id);
+  if(!sel || !value) return;
+  for(let i = 0; i < sel.options.length; i++) {
+    if(sel.options[i].value === value || sel.options[i].text === value) {
+      sel.selectedIndex = i;
+      break;
+    }
+  }
+}
+
+function renderExistingImages() {
+  const container = document.getElementById('currentImages');
+  const visible = existingImages.filter(img => !deletedImageIds.includes(img.id));
+  
+  if(!visible.length) {
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;grid-column:1/-1;">Aucune photo pour cette annonce.</p>';
+    return;
+  }
+  
+  container.innerHTML = visible.map(img => {
+    const url = img.image_url || img.image || '';
+    return `
+      <div class="img-thumb ${img.is_primary ? 'primary-thumb' : ''}">
+        <img src="${url}" alt="Photo" onerror="this.style.display='none'; this.parentElement.style.background='var(--surface-elevated)';">
+        <button class="img-remove" onclick="markImageDelete(${img.id})" title="Supprimer">✕</button>
+        ${img.is_primary ? '<div class="primary-badge">Principale</div>' : ''}
+      </div>`;
+  }).join('');
+}
+
+function markImageDelete(imgId) {
+  if(!deletedImageIds.includes(imgId)) {
+    deletedImageIds.push(imgId);
+  }
+  renderExistingImages();
+  updateImageLists();
+}
+
+function handleNewFiles(files) {
+  const maxImages = 8;
+  const currentCount = existingImages.length - deletedImageIds.length + newImageFiles.length;
+  const remaining = maxImages - currentCount;
+  
+  Array.from(files).slice(0, remaining).forEach(file => {
+    if(file.size > 5 * 1024 * 1024) { showToast(`${file.name} dépasse 5 Mo`, 'error'); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      newImageFiles.push({ file, dataUrl: e.target.result });
+      renderNewPreviews();
+      updateImageLists();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderNewPreviews() {
+  const container = document.getElementById('newImagesPreview');
+  container.innerHTML = newImageFiles.map((img, i) => `
+    <div class="img-thumb">
+      <img src="${img.dataUrl}" alt="Nouvelle">
+      <button class="img-remove" onclick="removeNewImage(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removeNewImage(index) {
+  newImageFiles.splice(index, 1);
+  renderNewPreviews();
+  updateImageLists();
+}
+
+function updateImageLists() {
+  const container = document.getElementById('imageLists');
+  if(deletedImageIds.length === 0 && newImageFiles.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+  
+  let html = '';
+  if(newImageFiles.length > 0) {
+    html += `<div class="image-list-title" style="color:var(--success);">📤 Nouvelles images à ajouter (${newImageFiles.length})</div>`;
+    html += `<div class="image-list">${newImageFiles.map((img, i) => `<span class="image-list-tag new">${img.file.name} <span style="cursor:pointer;font-weight:700;" onclick="removeNewImage(${i})">×</span></span>`).join('')}</div>`;
+  }
+  if(deletedImageIds.length > 0) {
+    html += `<div class="image-list-title" style="color:var(--error);">🗑️ Images à supprimer (${deletedImageIds.length})</div>`;
+    html += `<div class="image-list">${deletedImageIds.map(id => `<span class="image-list-tag deleted">Image #${id}</span>`).join('')}</div>`;
+  }
+  container.innerHTML = html;
+}
+
+// Drag & Drop
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+uploadArea.addEventListener('drop', e => { e.preventDefault(); uploadArea.classList.remove('drag-over'); handleNewFiles(e.dataTransfer.files); });
+
+function validate() {
+  const fields = ['brand','vehicleName','year','fuel','transmission','milage','price','location','description','phone'];
+  let valid = true;
+  fields.forEach(f => {
+    const el = document.getElementById(f);
+    const err = document.getElementById('err-' + f);
+    if(!el || !el.value.trim()) {
+      el?.classList.add('error');
+      err?.classList.add('show');
+      valid = false;
+    } else {
+      el.classList.remove('error');
+      err?.classList.remove('show');
+    }
+  });
+  return valid;
+}
+
+async function saveChanges() {
+  if(!validate()) { showToast('Veuillez remplir tous les champs obligatoires', 'error'); return; }
+
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Enregistrement…';
+
+  const payload = {
+    brand: document.getElementById('brand').value.trim(),
+    name: document.getElementById('vehicleName').value.trim(),
+    year: parseInt(document.getElementById('year').value),
+    fuel: document.getElementById('fuel').value,
+    transmissionType: document.getElementById('transmission').value,
+    milage: parseInt(document.getElementById('milage').value),
+    price: parseInt(document.getElementById('price').value),
+    location: document.getElementById('location').value,
+    description: document.getElementById('description').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    coleur: document.getElementById('color').value.trim() || undefined,
+  };
+
+  try {
+    // Update vehicle data
+    const res = await fetch(`${CATALOG_URL}/vehicules/${vehicleId}/`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': getToken() },
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(Object.values(errData).flat().join(' ') || `Erreur ${res.status}`);
+    }
+
+    // Delete marked images
+    for(const imgId of deletedImageIds) {
+      try {
+        await fetch(`${CATALOG_URL}/vehicules/${vehicleId}/remove-image/${imgId}/`, {
+          method: 'DELETE',
+          headers: { 'Authorization': getToken() }
+        });
+      } catch(e) { console.warn('Delete image error:', imgId, e); }
+    }
+
+    // Upload new images
+    for(const img of newImageFiles) {
+      try {
+        const formData = new FormData();
+        formData.append('image', img.file);
+        await fetch(`${CATALOG_URL}/vehicules/${vehicleId}/add_image/`, {
+          method: 'POST',
+          headers: { 'Authorization': getToken() },
+          body: formData
+        });
+      } catch(e) { console.warn('Upload image error:', img.file.name, e); }
+    }
+
+    showAlert('mainAlert', '✅ Annonce mise à jour avec succès ! Redirection...', 'success');
+    showToast('Modifications enregistrées !', 'success');
+    setTimeout(() => { window.location.href = 'profile.html'; }, 2000);
+
+  } catch(e) {
+    showAlert('mainAlert', '❌ ' + (e.message || 'Erreur'), 'error');
+    showToast('Erreur : ' + e.message, 'error');
+    btn.disabled = false;
+    btn.innerHTML = 'Enregistrer les modifications';
+  }
+}
+
+async function confirmDelete() {
+  const btn = document.getElementById('confirmDeleteBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Suppression…';
+  try {
+    const res = await fetch(`${CATALOG_URL}/vehicules/${vehicleId}/`, {
+      method: 'DELETE',
+      headers: { 'Authorization': getToken() }
+    });
+    if(res.ok || res.status === 204) {
+      showToast('Annonce supprimée', 'success');
+      setTimeout(() => { window.location.href = 'profile.html'; }, 1200);
+    } else throw new Error(`Erreur ${res.status}`);
+  } catch(e) {
+    showToast('Impossible de supprimer : ' + e.message, 'error');
+    document.getElementById('deleteModal').classList.remove('active');
+    btn.disabled = false;
+    btn.innerHTML = 'Supprimer';
+  }
+}
+
+function showAlert(id, msg, type) {
+  const el = document.getElementById(id);
+  el.className = `alert ${type} show`;
+  el.innerHTML = msg;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showToast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+</script>
+</body>
+</html>
