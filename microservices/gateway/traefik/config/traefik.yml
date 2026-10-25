@@ -1,0 +1,38 @@
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+
+providers:
+  file:
+    directory: /etc/traefik/conf
+    watch: true
+  consulCatalog:
+    prefix: traefik
+    refreshInterval: 15s
+    endpoint:
+      address: http://172.18.0.1:8500
+    exposedByDefault: false
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: your@email.com
+      storage: /acme.json
+      httpChallenge:
+        entryPoint: web
+
+log:
+  level: DEBUG
+
+accessLog: {}
