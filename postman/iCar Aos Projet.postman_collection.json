@@ -1,0 +1,1869 @@
+{
+  "info": {
+    "_postman_id": "4baeec1d-ff20-403b-9d63-7faab846645a",
+    "name": "iCar Aos Projet Copy",
+    "description": "Complete Postman collection for the Notification Microservice.\n\nFolders:\n1. Simple Notification — direct DB creation, no queue\n2. Follow Post — follow/unfollow/list\n3. Follow User — follow/unfollow/list\n4. Content Event — simulate Main API publishing add/edit car\n5. Notifications CRUD — list, mark read, delete\n\nBase URL: http://localhost:8001",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33326939"
+  },
+  "item": [
+    {
+      "name": "Auth MicroService",
+      "item": [
+        {
+          "name": "authentification",
+          "item": [
+            {
+              "name": "Admin",
+              "item": [
+                {
+                  "name": "Login Admin",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const jsonData = pm.response.json();",
+                          "",
+                          "if (jsonData.access) {",
+                          "        pm.environment.set(\"access_token_admin\", jsonData.access);",
+                          "",
+                          "} else {",
+                          "    console.log(\"❌ No tokens found in response\");",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"admin\"\n}"
+                    },
+                    "url": {
+                      "raw": "https://api.icaralgerie.com/auth/api/login/",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "icaralgerie",
+                        "com"
+                      ],
+                      "path": [
+                        "auth",
+                        "api",
+                        "login",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get All Users (Admin Only)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token_admin}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "https://api.icaralgerie.com/auth/api/users/",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "icaralgerie",
+                        "com"
+                      ],
+                      "path": [
+                        "auth",
+                        "api",
+                        "users",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update user",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token_admin}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\" :\"mohamed\",\n    \"email\": \"mohamed@example.com\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{login_url}}/api/users/3/",
+                      "host": [
+                        "{{login_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "users",
+                        "3",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get Single User",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token_admin}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "https://api.icaralgerie.com/auth/api/users?id=3",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "icaralgerie",
+                        "com"
+                      ],
+                      "path": [
+                        "auth",
+                        "api",
+                        "users"
+                      ],
+                      "query": [
+                        {
+                          "key": "id",
+                          "value": "3"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Signup",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// Parse the JSON response",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Check if response contains tokens",
+                      "if (jsonData.access && jsonData.refresh) {",
+                      "    ",
+                      "    // Set access token to environment variable",
+                      "    pm.environment.set(\"access_token\",\"Bearer \"+ jsonData.access);",
+                      "    ",
+                      "    // Set refresh token to environment variable",
+                      "    pm.environment.set(\"refresh_token\", jsonData.refresh);",
+                      "    ",
+                      "    // Optional: Set user info",
+                      "    if (jsonData.user) {",
+                      "        pm.environment.set(\"user_id\", jsonData.user.id.toString());",
+                      "        pm.environment.set(\"user_email\", jsonData.user.email);",
+                      "        pm.environment.set(\"user_role\", jsonData.user.role);",
+                      "    }",
+                      "    ",
+                      "    console.log(\"✅ Tokens saved to environment variables\");",
+                      "    console.log(\"Access Token:\", jsonData.access.substring(0, 50) + \"...\");",
+                      "    console.log(\"Refresh Token:\", jsonData.refresh.substring(0, 50) + \"...\");",
+                      "    ",
+                      "} else {",
+                      "    console.log(\"❌ No tokens found in response\");",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"yacine or\",\n    \"email\": \"yacine@gmail.com\",\n    \"number\": \"1234567890\",\n    \"password\": \"siham2003\",\n    \"confirm_password\": \"siham2003\"\n\n  }"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/auth/api/signup/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "signup",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// Parse the JSON response",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Check if response contains tokens",
+                      "if (jsonData.access && jsonData.refresh) {",
+                      "    ",
+                      "    // Set access token to environment variable",
+                      "    pm.environment.set(\"access_token\", jsonData.access);",
+                      "    ",
+                      "    // Set refresh token to environment variable",
+                      "    pm.environment.set(\"refresh_token\", jsonData.refresh);",
+                      "    ",
+                      "    // Optional: Set user info",
+                      "    if (jsonData.user) {",
+                      "        pm.environment.set(\"user_id\", jsonData.user.id.toString());",
+                      "        pm.environment.set(\"user_email\", jsonData.user.email);",
+                      "        pm.environment.set(\"user_role\", jsonData.user.role);",
+                      "    }",
+                      "    ",
+                      "    console.log(\"✅ Tokens saved to environment variables\");",
+                      "    console.log(\"Access Token:\", jsonData.access.substring(0, 50) + \"...\");",
+                      "    console.log(\"Refresh Token:\", jsonData.refresh.substring(0, 50) + \"...\");",
+                      "    ",
+                      "} else {",
+                      "    console.log(\"❌ No tokens found in response\");",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"oussamakuj@gmail.com\",\n    \"password\": \"oussama@\"\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/auth/api/login/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "login",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Forgot Password",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/auth/api/forgot-password/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "forgot-password",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Change Password",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"old_password\":\"oussama@\",\n    \"new_password\":\"oussama2003\",\n    \"confirm_password\":\"oussama2003\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/auth/api/change-password/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "change-password",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Profile",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/auth/api/profile/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "profile",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Profile",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/auth/api/users/me/delete/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "users",
+                    "me",
+                    "delete",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Updata Profile",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\":\"ouss 21\",\n    \"id\":23,\n    \"email\":\"oussama@gmail.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/auth/api/profile/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "profile",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vehicule MicroService",
+      "item": [
+        {
+          "name": "Categories",
+          "item": [
+            {
+              "name": "List All Categories",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Luxury Sedan\",\n    \"image\": \"category_images/sedan.jpg\"\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/categories/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "categories",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Category",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "multipart/form-data"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Car",
+                      "type": "text"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": "/Users/mac/Downloads/car.png"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/categories/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "categories",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Category by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/categories/1",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "categories",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Category",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Car",
+                      "type": "text",
+                      "uuid": "2d46944a-8ee2-4d3a-addb-e83682568c78"
+                    },
+                    {
+                      "key": "image",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "b99f5f67-292a-49cc-9ac6-57b20798daad",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/categories/1/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "categories",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Partial Update Category",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Car\"\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/categories/1/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "categories",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Category",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/categories/1/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "categories",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Subcategories",
+          "item": [
+            {
+              "name": "List All Subcategories",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{vehicule_url}}/api/subcategories/",
+                  "host": [
+                    "{{vehicule_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "subcategories",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Subcategories by Category",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/subcategories/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "subcategories",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Subcategory",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "multipart/form-data"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Sedan",
+                      "type": "text"
+                    },
+                    {
+                      "key": "categorie",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": "/Users/mac/Downloads/sedan.png"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/subcategories/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "subcategories",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Subcategory by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/subcategories/1",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "subcategories",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Subcategory",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Sedan",
+                      "type": "text",
+                      "uuid": "0658a9a1-986d-4c59-ba03-fb2ec93cb134"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "uuid": "cde8032d-5f6e-4d94-b444-bc6301645a60",
+                      "src": "/Users/mac/Downloads/sedan.png"
+                    },
+                    {
+                      "key": "categorie",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "b973b080-3129-4be0-b11b-29f1001286b0"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/subcategories/1/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "subcategories",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Partial Update Subcategory",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Sedan\"\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/subcategories/1/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "subcategories",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Subcategory",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{vehicule_url}}/api/subcategories/1/",
+                  "host": [
+                    "{{vehicule_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "subcategories",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Vehicles",
+          "item": [
+            {
+              "name": "List All Vehicles",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Vehicles by User (Public)",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Toyota Camry 2024 Updated\",\n    \"brand\": \"Toyota\",\n    \"subcategory\": 1,\n    \"user_id\": 1,\n    \"status\": \"DRAFT\",\n    \"year\": 2024,\n    \"description\": \"Like new, full service history\",\n    \"phone\": \"0551234567\",\n    \"location\": \"Oran, Algeria\",\n    \"milage\": 16000,\n    \"coleur\": \"White\",\n    \"fuel\": \"hybrid\",\n    \"transmissionType\": \"AUTOMATIC\"\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Active Vehicles Only",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/?status=ACTIVE",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "ACTIVE"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Vehicles by Fuel Type",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/?fuel=electric",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "fuel",
+                      "value": "electric"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Vehicles by Transmission",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/?transmissionType=AUTOMATIC",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "transmissionType",
+                      "value": "AUTOMATIC"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Vehicles by Subcategory",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/?subcategory=1",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "subcategory",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Vehicles by Year Range",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/?year__gte=2020&year__lte=2024&subcategory=3",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "year__gte",
+                      "value": "2020"
+                    },
+                    {
+                      "key": "year__lte",
+                      "value": "2024"
+                    },
+                    {
+                      "key": "subcategory",
+                      "value": "3"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Vehicle",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Toyota",
+                      "type": "text",
+                      "uuid": "b708ff55-2356-4c9a-abbf-0687cb5796e4"
+                    },
+                    {
+                      "key": "brand",
+                      "value": "Yaris",
+                      "type": "text",
+                      "uuid": "8384d4da-66fb-439f-81c7-f8b8f033a8d9"
+                    },
+                    {
+                      "key": "price",
+                      "value": "230000",
+                      "type": "text",
+                      "uuid": "cf1fba3a-35af-4a0b-81fc-2feb884d7bed"
+                    },
+                    {
+                      "key": "year",
+                      "value": "2007",
+                      "type": "text",
+                      "uuid": "731cf7b3-ac30-47b4-a524-925205d655e8"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Good Car",
+                      "type": "text",
+                      "uuid": "b8510b1f-c983-41d3-b501-3b373e95b9dc"
+                    },
+                    {
+                      "key": "phone",
+                      "value": "0555555555",
+                      "type": "text",
+                      "uuid": "fbdeccdc-bab4-402a-919f-fd684d6c060d"
+                    },
+                    {
+                      "key": "location",
+                      "value": "Alger",
+                      "type": "text",
+                      "uuid": "e2b9622a-a45b-453d-99db-8f5d07820e6b"
+                    },
+                    {
+                      "key": "milage",
+                      "value": "120000",
+                      "type": "text",
+                      "uuid": "045e941b-fc07-48fe-b9e8-bc0b6ab194fb"
+                    },
+                    {
+                      "key": "coleur",
+                      "value": "white",
+                      "type": "text",
+                      "uuid": "fed286c0-2957-45bd-965c-a2d771301f70"
+                    },
+                    {
+                      "key": "fuel",
+                      "value": "hybrid",
+                      "type": "text",
+                      "uuid": "1da6338f-d38c-4612-ba6c-0daca1192341"
+                    },
+                    {
+                      "key": "transmissionType",
+                      "value": "AUTOMATIC",
+                      "type": "text",
+                      "uuid": "230ed3b4-a8a6-49c8-bf97-99063651fae8"
+                    },
+                    {
+                      "key": "images",
+                      "type": "file",
+                      "uuid": "3b13a6cf-5c9a-4528-b0b7-42c44dc27734",
+                      "src": "/Users/mac/Downloads/sedan.png"
+                    },
+                    {
+                      "key": "subcategory",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "f37d0ef3-58ea-4af4-b46d-5563d0115a72"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "23",
+                      "type": "text",
+                      "uuid": "7eb11ae3-94b3-484f-854f-4eef8cfaa5f2"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Vehicle by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/2/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    "2",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get My Vehicles (Authenticated)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/my_cars",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    "my_cars"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Vehicle",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Toyota Camry 2024 Updated\",\n    \"brand\": \"Toyota\",\n    \"subcategory\": 1,\n    \"user_id\": 1,\n    \"status\": \"DRAFT\",\n    \"year\": 2024,\n    \"description\": \"Like new, full service history\",\n    \"phone\": \"0551234567\",\n    \"location\": \"Oran, Algeria\",\n    \"milage\": 16000,\n    \"coleur\": \"White\",\n    \"fuel\": \"hybrid\",\n    \"transmissionType\": \"AUTOMATIC\"\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/1/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Partial Update Vehicle",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"price\": 35000,\n    \"status\": \"INACTIVE\"\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/1/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Vehicle",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/catalog/api/vehicules/15/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "catalog",
+                    "api",
+                    "vehicules",
+                    "15",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notification MicroService",
+      "item": [
+        {
+          "name": "1 — Follow Post",
+          "item": [
+            {
+              "name": "Follow Post (user 1 follows post 10)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": 3\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/notifications/api/follow/post/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "notifications",
+                    "api",
+                    "follow",
+                    "post",
+                    ""
+                  ]
+                },
+                "description": "User 1 follows post 10. Publishes to 'follow_post' queue. Worker notifies user 1 with a confirmation."
+              },
+              "response": []
+            },
+            {
+              "name": "Unfollow Post (user 1 unfollows post 10)",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": 1,\n  \"post_id\": 10\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/notifications/api/unfollow/post/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "notifications",
+                    "api",
+                    "unfollow",
+                    "post",
+                    ""
+                  ]
+                },
+                "description": "Removes the follow relationship silently. NO notification is created or published."
+              },
+              "response": []
+            },
+            {
+              "name": "List — posts followed by user 1",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/notifications/api/follow/post/list/?user_id=1",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "notifications",
+                    "api",
+                    "follow",
+                    "post",
+                    "list",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Returns all posts that user 1 is following."
+              },
+              "response": []
+            },
+            {
+              "name": "List — all followers of post 10",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.icaralgerie.com/notifications/api/follow/post/list/?post_id=12",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "notifications",
+                    "api",
+                    "follow",
+                    "post",
+                    "list",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "post_id",
+                      "value": "12"
+                    }
+                  ]
+                },
+                "description": "Returns all users following post 10. Useful to verify fan-out recipients before firing content_event."
+              },
+              "response": []
+            }
+          ],
+          "description": "Follow or unfollow a post. Following publishes to RabbitMQ → worker creates a confirmation notification. Unfollowing is silent."
+        },
+        {
+          "name": "2 — Follow User",
+          "item": [
+            {
+              "name": "Follow User (user 2 follows user 1)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"following\": 48\n}"
+                },
+                "url": {
+                  "raw": "https://api.icaralgerie.com/notifications/api/follow/user/",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "icaralgerie",
+                    "com"
+                  ],
+                  "path": [
+                    "notifications",
+                    "api",
+                    "follow",
+                    "user",
+                    ""
+                  ]
+                },
+                "description": "User 2 follows user 1. Publishes to 'follow_user' queue. Worker notifies user 1: 'User 2 started following you.'"
+              },
+              "response": []
+            },
+            {
+              "name": "Unfollow User (user 3 unfollows user 1)",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"follower_id\": 3,\n  \"following_id\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/unfollow/user/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "unfollow",
+                    "user",
+                    ""
+                  ]
+                },
+                "description": "User 3 unfollows user 1 silently. NO notification published to RabbitMQ."
+              },
+              "response": []
+            },
+            {
+              "name": "List — users that user 2 follows",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/follow/user/list/?following=22",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "follow",
+                    "user",
+                    "list",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "following",
+                      "value": "22"
+                    }
+                  ]
+                },
+                "description": "Returns all users that user 2 is following."
+              },
+              "response": []
+            },
+            {
+              "name": "List — all followers of user 1",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/follow/user/list/?follower=22",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "follow",
+                    "user",
+                    "list",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "follower",
+                      "value": "22"
+                    }
+                  ]
+                },
+                "description": "Returns all users who follow user 1. These are the recipients of a content_event from user 1."
+              },
+              "response": []
+            }
+          ],
+          "description": "Follow or unfollow another user. Following publishes to RabbitMQ → worker creates a 'New follower' notification for the followed user. Unfollowing is silent."
+        },
+        {
+          "name": "3 — Notifications CRUD",
+          "item": [
+            {
+              "name": "List my notifications",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/notifications/?user_id=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "notifications",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Returns all notifications for user 1, newest first."
+              },
+              "response": []
+            },
+            {
+              "name": "Mark one notification as read",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/notifications/1/read/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "notifications",
+                    "1",
+                    "read",
+                    ""
+                  ]
+                },
+                "description": "Marks notification with id=1 as read. Replace '1' with the actual id from the list response."
+              },
+              "response": []
+            },
+            {
+              "name": "Mark ALL notifications as read for user 1",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/notifications/read-all/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "notifications",
+                    "read-all",
+                    ""
+                  ]
+                },
+                "description": "Bulk-marks all unread notifications for user 1 as read. Returns { 'updated': N }."
+              },
+              "response": []
+            },
+            {
+              "name": "Delete notification",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/notifications/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "notifications",
+                    "1",
+                    ""
+                  ]
+                },
+                "description": "Deletes notification with id=1. Returns 204 No Content. Replace '1' with actual id."
+              },
+              "response": []
+            }
+          ],
+          "description": "Read, mark as read, and delete notifications. These are synchronous REST calls — no RabbitMQ involved."
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8001",
+      "type": "string"
+    }
+  ]
+}
