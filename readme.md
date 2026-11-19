@@ -17,6 +17,10 @@ iCar Algeria is a microservices-based car marketplace backend built with Django 
 
 ---
 
+## Platform Preview
+
+![platform](https://raw.githubusercontent.com/Siamsell/iCar-MicroService/main/images/platform.png)
+
 ## Architecture
 
 ![diagram](https://raw.githubusercontent.com/Siamsell/iCar-MicroService/main/images/diagram.png)
